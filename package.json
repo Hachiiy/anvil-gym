@@ -1,0 +1,15 @@
+{
+  "name": "anvil-gym",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "An installable Gym App for Anvil",
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "zod": "4.6.5"
+  },
+  "scripts": {
+    "check": "node src/check-source.mjs"
+  }
+}

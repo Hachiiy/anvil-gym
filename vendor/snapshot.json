@@ -1,0 +1,21 @@
+{
+  "profile": "anvil-app-author/1",
+  "license": "Apache-2.0",
+  "files": {
+    "author/archive.ts": "f0dcb1a8acb5b7913696326fbcbe64df54c22d6ee7f888d7ffd6d87283bce444",
+    "author/cli.ts": "3ab1d72d43e106e82f7a6806fcbf58c3c8878717a32ca772e39521970fd36d06",
+    "author/conformance.ts": "f5e5f090ef7d6bae36a940ccd5537065f43e57dcefb20d7b73b99c86d5770d3a",
+    "author/package.ts": "8628b80876e09449c20736b9f45cf435bf8db61d19574d40beeeda9d5fac5f42",
+    "contracts/apps/identity.ts": "712ffc0571d4919b77c31871f6b4cbd7ea02d685f7b6604ea50ad1d5569cb90d",
+    "contracts/apps/index.ts": "a865f119cbdf692d3851e512ccc1b4d930d33091801931a017f505b3b961c80c",
+    "contracts/apps/json-schema.ts": "34abbfae655ec9141c240ec6950f9cfa10f13ee71f56edfedba2d8492ed58c2e",
+    "contracts/apps/json.ts": "b4d0fe9f10b05ff5591667e62aebb0a0ca247cc687473640d626e98242e503bf",
+    "contracts/apps/manifest.ts": "42046a1906a9c2dff875a14370e6b53c5f5fde534b3ccd93f8a1b0c51fe0568f",
+    "contracts/apps/recipe-validation.ts": "dbd30d75a4aafc1670d3006f10b6c60ce516caaf4f0558d06ba8d99f7b097c03",
+    "contracts/apps/recipe.ts": "37374ec1d2cbfa5c9aafdffe065b757e6f3799b1cb55b55257b516ded247574a",
+    "contracts/apps/schema-inference.ts": "653230b989555faf40e6805dcf3a99017a041ab3a3e71453f16ddff09fe728d9",
+    "contracts/apps/units.ts": "ce63cb93c8b4ec048b0da41cafd674b5153eb7c0284ffd30ff2657035dfed805",
+    "contracts/apps/validation.ts": "9a8f5c6dcaa761fb11652e917d15672419a1f2da8f2fe683c70724d7e1a6a3cd",
+    "contracts/limits.ts": "a0ddda34d6909a9fc2355a14985cca4b72f7f15d6f5be08134d83cb76148e1c9"
+  }
+}

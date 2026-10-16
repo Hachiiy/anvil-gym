@@ -1,0 +1,27 @@
+{
+  "source": "https://github.com/yuhonas/free-exercise-db",
+  "commit": "f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5",
+  "datasetUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/dist/exercises.json",
+  "datasetSha256": "5bb747e3fc658f095a60dcbf6d53c96627acdcc6ffb6fffde86f7e26995d40bf",
+  "license": "Unlicense",
+  "licenseUrl": "https://raw.githubusercontent.com/yuhonas/free-exercise-db/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5/LICENSE.md",
+  "licenseSha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e",
+  "selectedEntries": 19,
+  "retainedFields": [
+    "id",
+    "name",
+    "category",
+    "equipment",
+    "primaryMuscles",
+    "secondaryMuscles"
+  ],
+  "omittedFields": [
+    "force",
+    "level",
+    "mechanic",
+    "instructions",
+    "images"
+  ],
+  "notes": "A bounded public catalog source snapshot. No images or training instructions are redistributed. Gym metric defaults and any muscle-label adaptation are maintained separately.",
+  "selectedSha256": "c1eaa996c19362a6c31d1f8682fdecbc19e90fada5fe52f3c496ccacd874b92e"
+}
