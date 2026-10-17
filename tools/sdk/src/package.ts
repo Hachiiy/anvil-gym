@@ -51,16 +51,11 @@ export function readAppJson(
   return value;
 }
 const extensionTypes: Record<string, string> = {
-  html: "text/html",
-  css: "text/css",
-  js: "text/javascript",
   json: "application/json",
-  svg: "image/svg+xml",
   png: "image/png",
   jpg: "image/jpeg",
   jpeg: "image/jpeg",
   webp: "image/webp",
-  woff2: "font/woff2",
   txt: "text/plain",
   md: "text/plain",
 };
@@ -90,11 +85,6 @@ export function validateAppFiles(
     const extension = asset.path.split(".").pop()?.toLowerCase() ?? "";
     if (extensionTypes[extension] !== asset.mediaType)
       throw new Error("Unsupported asset extension/media type.");
-    if (
-      ["text/html", "text/css", "text/javascript"].includes(asset.mediaType) &&
-      (!asset.path.startsWith("ui/") || asset.role !== "ui")
-    )
-      throw new Error("Browser programs must be declared UI assets under ui/.");
     if (
       ["icon", "cover"].includes(asset.role) &&
       !["image/png", "image/jpeg", "image/webp"].includes(asset.mediaType)

@@ -1,11 +1,10 @@
-export { runCli } from "../vendor/author/cli.js";
 export {
   buildAppPackage,
   canonicalAppJson,
   appSha256,
-} from "../vendor/author/package.js";
+} from "../tools/sdk/src/package.js";
 export {
   parseAppManifest,
   appJsonSchema,
   validateAppValue,
-} from "../vendor/contracts/apps/index.js";
+} from "../tools/sdk/contracts/apps/index.js";

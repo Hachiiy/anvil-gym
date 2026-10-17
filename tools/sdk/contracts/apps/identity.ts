@@ -2,15 +2,14 @@ import { z } from "zod";
 import { appPlatformLimits as limits } from "../limits.js";
 
 export const appProfile = Object.freeze({
-  manifest: "1.0",
+  manifest: "2.0",
   coreActionApi: 1,
   recipeFormat: 1,
   integrationAdapter: 1,
-  designCssContract: 1,
+  nativeUi: 1,
+  designComponents: 1,
   schemaDialect: "https://json-schema.org/draft/2020-12/schema",
   mcp: "2025-11-25",
-  mcpApps: "2026-01-26",
-  uiBridge: "anvil-app-ui/1",
 });
 export const appKeySchema = z.string().regex(/^[a-z][a-z0-9-]{0,63}$/);
 export const appFieldKeySchema = z
@@ -72,7 +71,8 @@ export const appCompatibilitySchema = z.strictObject({
   coreActionApi: z.literal(1),
   recipeFormat: z.literal(1),
   integrationAdapter: z.literal(1),
-  designCssContract: z.literal(1),
+  nativeUi: z.literal(1),
+  designComponents: z.literal(1),
 });
 const descriptorFields = {
   schemaVersion: z.literal("1.0"),

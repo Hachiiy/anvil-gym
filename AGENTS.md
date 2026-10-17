@@ -4,8 +4,9 @@
 - Include only portable product code, documentation and fictional examples.
   Never include personal records, private deployment details, credentials,
   unrelated projects, runtime exports or local paths in committed material.
-- Gym is a standard declarative Anvil App. Browser code owns presentation;
-  declared Core actions own persistent business behavior for users and agents.
+- Gym is a standard declarative Anvil App. Native view definitions use Anvil's
+  shared Angular components; no publisher scripts, HTML, CSS or iframe execute
+  in the installed App. Declared Core actions own persistent business behavior.
   Do not add publisher server code, private Anvil workspace dependencies or
   special installation/authorization bypasses.
 - Keep maintained code files under 500 physical lines. Use cohesive modules.

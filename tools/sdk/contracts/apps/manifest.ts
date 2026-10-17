@@ -10,6 +10,7 @@ import {
 } from "./identity.js";
 import { appJsonSchema } from "./json-schema.js";
 import { appRecipeSchema } from "./recipe.js";
+import { nativeViewSchema } from "./native/view.js";
 
 export const appCapabilitySchema = z
   .string()
@@ -53,7 +54,7 @@ export const appActionSchema = z.strictObject({
   recipe: appRecipeSchema,
 });
 export const appManifestSchema = z.strictObject({
-  schemaVersion: z.literal("1.0"),
+  schemaVersion: z.literal("2.0"),
   package: z.strictObject({
     key: appKeySchema,
     name: z.string().min(1).max(80),
@@ -71,25 +72,13 @@ export const appManifestSchema = z.strictObject({
       z.strictObject({
         path: appPathSchema,
         mediaType: z.enum([
-          "text/html",
-          "text/css",
-          "text/javascript",
           "application/json",
-          "image/svg+xml",
           "image/png",
           "image/jpeg",
           "image/webp",
-          "font/woff2",
           "text/plain",
         ]),
-        role: z.enum([
-          "ui",
-          "icon",
-          "cover",
-          "documentation",
-          "fixture",
-          "data",
-        ]),
+        role: z.enum(["icon", "cover", "documentation", "fixture", "data"]),
       }),
     )
     .max(limits.archiveFiles - 1),
@@ -137,18 +126,7 @@ export const appManifestSchema = z.strictObject({
       }),
     )
     .max(limits.schedules),
-  ui: z
-    .array(
-      z.strictObject({
-        id: appKeySchema,
-        label: z.string().min(1).max(80),
-        surface: z.enum(["app", "widget"]),
-        entry: appPathSchema.optional(),
-        renderer: z.enum(["guest", "action-form-result"]),
-        actions: z.array(appKeySchema).max(limits.actions),
-      }),
-    )
-    .max(limits.widgets),
+  ui: z.array(nativeViewSchema).max(limits.widgets),
   capabilities: z.array(appCapabilitySchema).max(128),
   dependencies: z
     .array(

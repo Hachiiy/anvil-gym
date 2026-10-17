@@ -54,7 +54,7 @@ export async function runAppConformance(
     authorClaims: manifest.modelClaims,
     modelVerification: "not-executed",
     limitations: [
-      "Static checks cannot prove arbitrary browser UI action completeness.",
+      "Static links do not prove Core behavior or rendered interactions.",
       "No model or network call is made by this validator.",
     ],
   } as const;

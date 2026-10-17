@@ -5,6 +5,7 @@ import { validateAppRecipe } from "./recipe-validation.js";
 import { assertAppJson } from "./json.js";
 import { appPlatformLimits as limits } from "../limits.js";
 import { appOriginKey } from "./identity.js";
+import { validateNativeView } from "./native/validation.js";
 
 export function parseAppManifest(value: unknown): AppManifest {
   assertAppJson(value);
@@ -124,26 +125,8 @@ export function validateAppManifest(manifest: AppManifest): string[] {
             : true;
     if (!found) errors.push(`Unknown capability target: ${capability}.`);
   }
-  for (const ui of manifest.ui) {
-    if (
-      ui.actions.some(
-        (name) => !manifest.actions.some((action) => action.name === name),
-      )
-    )
-      errors.push(`Unknown UI action in ${ui.id}.`);
-    if (
-      ui.renderer === "guest" &&
-      !manifest.assets.some(
-        (item) =>
-          item.path === ui.entry &&
-          item.mediaType === "text/html" &&
-          item.role === "ui",
-      )
-    )
-      errors.push(`Missing UI asset in ${ui.id}.`);
-    if (ui.renderer === "action-form-result" && ui.entry)
-      errors.push("Host-rendered forms do not have an executable entry.");
-  }
+  for (const view of manifest.ui)
+    errors.push(...validateNativeView(view, manifest, manifest.ui));
   for (const schedule of manifest.schedules) {
     const action = manifest.actions.find(
       (item) => item.name === schedule.action,

@@ -53,4 +53,18 @@ export const appPlatformLimits = Object.freeze({
   reviewDeadlineMs: 120000,
   reviewCandidates: 400,
   reviewAttempts: 3,
+  nativeUi: Object.freeze({
+    nodes: 256,
+    depth: 12,
+    expressions: 512,
+    expressionDepth: 16,
+    eventSteps: 8,
+    listItems: 100,
+    forms: 16,
+    sources: 16,
+    dialogs: 8,
+    stateBytes: 64 * 1024,
+    renderedNodes: 1000,
+    evaluationSteps: 4096,
+  }),
 });

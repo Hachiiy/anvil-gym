@@ -4,9 +4,10 @@ import { metricCases } from "./metric-fixtures.mjs";
 import { metricVersionAction } from "./metric-versions.mjs";
 import { exerciseActions } from "./exercise-actions.mjs";
 
+/** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
   return {
-    schemaVersion: "1.0",
+    schemaVersion: "2.0",
     package: {
       key: "gym",
       name: "Gym",
@@ -23,7 +24,8 @@ export function createGymManifest() {
       coreActionApi: 1,
       recipeFormat: 1,
       integrationAdapter: 1,
-      designCssContract: 1,
+      nativeUi: 1,
+      designComponents: 1,
     },
     assets: [],
     tables,

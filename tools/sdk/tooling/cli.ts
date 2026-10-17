@@ -18,8 +18,10 @@ import {
   canonicalAppJson,
   describeAppRelease,
   readAppJson,
-} from "./package.js";
-import { runAppConformance } from "./conformance.js";
+} from "../src/package.js";
+import { checkAppTypes } from "./author-types.js";
+import { compileAppSource } from "./author-source.js";
+import { runAppConformance } from "../src/conformance.js";
 
 async function regularFile(root: string, path: string) {
   const absolute = resolve(root, path);
@@ -45,16 +47,18 @@ export async function runCli(args: string[], compile: typeof build) {
   if (
     !command ||
     !directory ||
-    !["validate", "build", "package"].includes(command)
+    !["validate", "build", "package", "check"].includes(command)
   )
     throw new Error(
-      "Usage: anvil-app validate <directory> | build <directory> <output> | package <directory> <output> <release-identity.json>",
+      "Usage: anvil-app check <project> | validate <prebuilt-directory> | build <project> <output> | package <directory> <output> <release-identity.json>",
     );
   const root = await realpath(resolve(directory));
-  const manifest = parseAppManifest(
-    readAppJson(await regularFile(root, "manifest.json")),
-  );
-  if (command === "validate") {
+  if (command === "build" || command === "check") checkAppTypes(root);
+  const manifest =
+    command === "build" || command === "check"
+      ? await compileAppSource(resolve(root, "src/app.ts"), compile)
+      : parseAppManifest(readAppJson(await regularFile(root, "manifest.json")));
+  if (command === "validate" || command === "check") {
     const assets = new Map<string, Uint8Array>();
     for (const asset of manifest.assets)
       assets.set(asset.path, await regularFile(root, asset.path));
@@ -67,33 +71,7 @@ export async function runCli(args: string[], compile: typeof build) {
     throw new Error("Use an output directory outside the author source.");
   const assets = new Map<string, Uint8Array>();
   for (const asset of manifest.assets) {
-    let bytes: Uint8Array;
-    const source =
-      asset.mediaType === "text/javascript"
-        ? asset.path.replace(/\.js$/, ".ts")
-        : undefined;
-    let hasSource = false;
-    if (command === "build" && source) {
-      try {
-        await lstat(resolve(root, source));
-        hasSource = true;
-      } catch {
-        /* A prebuilt asset is also supported. */
-      }
-    }
-    if (hasSource && source) {
-      await regularFile(root, source);
-      const result = await compile({
-        entryPoints: [resolve(root, source)],
-        bundle: true,
-        write: false,
-        platform: "browser",
-        format: "iife",
-        target: "es2022",
-        logLevel: "silent",
-      });
-      bytes = result.outputFiles[0]!.contents;
-    } else bytes = await regularFile(root, asset.path);
+    const bytes = await regularFile(root, asset.path);
     assets.set(asset.path, bytes);
   }
   const built = buildAppPackage(manifest, assets);

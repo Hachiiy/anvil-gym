@@ -7,22 +7,24 @@ import { checkCatalog } from "./check-catalog.mjs";
 
 const root = new URL("../", import.meta.url);
 const snapshot = JSON.parse(
-  await readFile(new URL("vendor/snapshot.json", root)),
+  await readFile(new URL("tools/sdk/snapshot.json", root)),
 );
 for (const [path, expected] of Object.entries(snapshot.files)) {
   if (!/^[a-zA-Z0-9._/-]+$/.test(path) || path.split("/").includes(".."))
     throw new Error("Invalid author-tool snapshot path.");
-  const bytes = await readFile(new URL(`vendor/${path}`, root));
+  const bytes = await readFile(new URL(`tools/sdk/${path}`, root));
   if (createHash("sha256").update(bytes).digest("hex") !== expected)
     throw new Error(`Author-tool snapshot changed: ${path}`);
 }
-for (const directory of [
-  "src",
-  "vendor/author",
-  "vendor/contracts",
-  "vendor/contracts/apps",
-]) {
-  for (const name of await readdir(new URL(`${directory}/`, root))) {
+async function checkDirectory(directory) {
+  for (const entry of await readdir(new URL(`${directory}/`, root), {
+    withFileTypes: true,
+  })) {
+    const name = entry.name;
+    if (entry.isDirectory()) {
+      await checkDirectory(`${directory}/${name}`);
+      continue;
+    }
     if (!/\.(mjs|ts)$/.test(name)) continue;
     const source = await readFile(
       new URL(`${directory}/${name}`, root),
@@ -34,6 +36,7 @@ for (const directory of [
       );
   }
 }
+for (const directory of ["src", "tools/sdk"]) await checkDirectory(directory);
 await withAuthorTools(({ appJsonSchema, parseAppManifest }) => {
   for (const table of tables) appJsonSchema.parse(table.schema);
   parseAppManifest(createGymManifest());
