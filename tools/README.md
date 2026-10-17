@@ -1,6 +1,6 @@
 # Standalone public App SDK
 
-`sdk/` contains the Apache-2.0 Anvil App author profile 2.2.0 source distribution.
+`sdk/` contains the Apache-2.0 Anvil App author profile 2.3.0 source distribution.
 It includes typed native definition builders, package/archive validation,
 static conformance, the author-only TypeScript compiler/CLI and their bounded
 App contract dependencies. It contains no server, deployment configuration,

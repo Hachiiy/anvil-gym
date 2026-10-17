@@ -1,14 +1,6 @@
 import { recordSchemas, muscles, muscleRoles } from "./domain-schema.mjs";
 import { authoredMetrics } from "./metric-schema.mjs";
-import {
-  choice,
-  flag,
-  integer,
-  list,
-  object,
-  reference,
-  text,
-} from "./schema.mjs";
+import { choice, flag, list, object, reference, text } from "./schema.mjs";
 import {
   assertion,
   batch,
@@ -130,7 +122,7 @@ function writeAction(name, updating) {
       : [capability("write")],
     inputSchema: object({
       value: authoredExercise,
-      ...(updating ? { id: reference, revision: integer(1, 999999999) } : {}),
+      ...(updating ? { id: reference, revision: { type: "integer" } } : {}),
     }),
     resultSchema: rowSchema,
     recipe: {
@@ -148,7 +140,15 @@ function writeAction(name, updating) {
           : []),
         normalization(
           updating ? result("previous", "data", "metrics") : literal([]),
-          updating ? binary("add", input("revision"), literal(1)) : literal(1),
+          updating
+            ? {
+                op: "check-number",
+                value: binary("add", input("revision"), literal(1)),
+                minimum: 1,
+                maximum: 1000000000,
+                integer: true,
+              }
+            : literal(1),
         ),
         { id: "value", op: "let", value: normalizedValue },
         invoke("valid", "validate-exercise", result("value")),

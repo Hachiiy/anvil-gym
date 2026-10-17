@@ -24,6 +24,15 @@ export const appExpressionSchema = z.discriminatedUnion("op", [
   }),
   z.strictObject({ op: z.enum(["id", "now", "owner"]) }),
   z.strictObject({
+    op: z.literal("check-number"),
+    get value() {
+      return appExpressionSchema;
+    },
+    minimum: z.number(),
+    maximum: z.number(),
+    integer: z.boolean(),
+  }),
+  z.strictObject({
     op: z.literal("has"),
     get source() {
       return appExpressionSchema;

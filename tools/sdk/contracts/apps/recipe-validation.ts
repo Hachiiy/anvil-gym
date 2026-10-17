@@ -86,6 +86,15 @@ export function validateAppRecipe(
         return id;
       case "now":
         return { type: "string", maxLength: 24 };
+      case "check-number":
+        if (node.minimum > node.maximum)
+          fail("Numeric minimum must not exceed maximum.");
+        expect(child(node.value), ["number", "integer"]);
+        return {
+          type: node.integer ? "integer" : "number",
+          minimum: node.minimum,
+          maximum: node.maximum,
+        };
       case "has":
         field(child(node.source), node.path);
         return boolean;

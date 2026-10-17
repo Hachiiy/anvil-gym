@@ -1,5 +1,5 @@
 import { defineView } from "@anvil/app-sdk/author";
-import { defaultMetrics } from "../metric-schema.mjs";
+import { authoredMetric, defaultMetrics } from "../metric-schema.mjs";
 import {
   button,
   checkbox,
@@ -12,11 +12,11 @@ import {
   object,
   ref,
   select,
-  stack,
   text,
   type Binding,
 } from "./helpers.js";
 import { measurementEditor } from "./measurements.js";
+import { muscleEditor } from "./muscles.js";
 
 function metricValues(keys: (keyof typeof defaultMetrics)[]) {
   return keys.map((key) => {
@@ -38,9 +38,32 @@ function initial(editing: boolean): Binding {
     });
   const value = object(
     Object.fromEntries(
-      ["name", "equipment", "instructions", "archived"].map((key) => [
+      [
+        "name",
+        "category",
+        "equipment",
+        "muscles",
+        "metrics",
+        "instructions",
+        "archived",
+      ].map((key) => [
         key,
-        ref("source", ["data", key], "exercise"),
+        key === "metrics"
+          ? {
+              op: "map",
+              source: ref("source", ["data", "metrics"], "exercise"),
+              as: "definition",
+              maxItems: 12,
+              value: object(
+                Object.fromEntries(
+                  Object.keys(authoredMetric.properties).map((field) => [
+                    field,
+                    ref("item", [field], "definition"),
+                  ]),
+                ),
+              ),
+            }
+          : ref("source", ["data", key], "exercise"),
       ]),
     ),
   );
@@ -66,10 +89,13 @@ export function exerciseEditor(editing: boolean) {
     state: {
       schema: {
         ...empty,
-        properties: { measurementOptions: { type: "boolean" } },
-        required: ["measurementOptions"],
+        properties: {
+          measurementOptions: { type: "boolean" },
+          muscleOptions: { type: "boolean" },
+        },
+        required: ["measurementOptions", "muscleOptions"],
       },
-      initial: { measurementOptions: false },
+      initial: { measurementOptions: false, muscleOptions: false },
     },
     sources: editing
       ? [
@@ -82,14 +108,14 @@ export function exerciseEditor(editing: boolean) {
         ]
       : [],
     actions: [
-      editing ? "edit-exercise-details" : "create-exercise",
+      editing ? "update-exercise" : "create-exercise",
       "new-measurement",
       ...(editing ? ["get-exercise"] : []),
     ],
     forms: [
       {
         id: "exercise",
-        action: editing ? "edit-exercise-details" : "create-exercise",
+        action: editing ? "update-exercise" : "create-exercise",
         initial: initial(editing),
         commit: editing ? "autosave" : "explicit",
         onSuccess: editing
@@ -131,47 +157,20 @@ export function exerciseEditor(editing: boolean) {
         ),
         grid("exercise-fields", [
           field("exercise-name", "Name", ["value", "name"]),
-          ...(editing
-            ? []
-            : [
-                select(
-                  "exercise-category",
-                  "Type",
-                  ["value", "category"],
-                  [
-                    { value: "strength", label: "Strength" },
-                    { value: "cardio", label: "Cardio" },
-                    { value: "custom", label: "Custom" },
-                  ],
-                ),
-              ]),
+          select(
+            "exercise-category",
+            "Type",
+            ["value", "category"],
+            [
+              { value: "strength", label: "Strength" },
+              { value: "cardio", label: "Cardio" },
+              { value: "custom", label: "Custom" },
+            ],
+          ),
           field("exercise-equipment", "Equipment", ["value", "equipment"]),
         ]),
-        ...(editing
-          ? [
-              heading("saved-measurements", "Measurements"),
-              {
-                id: "saved-measurement-list",
-                component: "list" as const,
-                props: {
-                  items: ref("source", ["data", "metrics"], "exercise"),
-                  as: "measurement",
-                  key: ["key"],
-                  maxItems: 12,
-                },
-                template: stack("saved-measurement", [
-                  text(
-                    "saved-measurement-label",
-                    ref("item", ["label"], "measurement"),
-                  ),
-                  text(
-                    "saved-measurement-unit",
-                    ref("item", ["unit"], "measurement"),
-                  ),
-                ]),
-              },
-            ]
-          : [measurementEditor]),
+        measurementEditor,
+        muscleEditor,
         field(
           "exercise-instructions",
           "Notes and instructions",
