@@ -4,7 +4,7 @@ import type { NativeBindingScope } from "./inference.js";
 import { nativePathType } from "./inference.js";
 import { NativeCheckContext } from "./check-context.js";
 
-const failure: AppJsonSchema = {
+export const nativeFailureSchema: AppJsonSchema = {
   type: "object",
   properties: {
     code: { type: "string", maxLength: 100 },
@@ -96,7 +96,7 @@ export function checkNativeEvents(
         );
         checkNativeEvents(
           event.onFailure,
-          { ...scope, event: failure },
+          { ...scope, event: nativeFailureSchema },
           check,
           `${at}.onFailure`,
         );

@@ -11,6 +11,9 @@
     "zod": "4.6.5"
   },
   "scripts": {
+    "dev": "anvil-app dev .",
+    "connect": "anvil-app connect .",
+    "build": "anvil-app build .",
     "check": "anvil-app check . && node src/check-source.mjs"
   }
 }

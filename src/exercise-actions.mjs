@@ -180,6 +180,50 @@ export const exerciseActions = [
   writeAction("create-exercise", false),
   writeAction("update-exercise", true),
   {
+    name: "edit-exercise-details",
+    summary:
+      "Edit exercise details while preserving measurement meanings and history",
+    effect: "transaction",
+    capabilities: [capability("read"), capability("write")],
+    inputSchema: object({
+      id: reference,
+      revision: { type: "integer" },
+      value: object(
+        Object.fromEntries(
+          ["name", "equipment", "instructions", "archived"].map((key) => [
+            key,
+            dataSchema.properties[key],
+          ]),
+        ),
+      ),
+    }),
+    resultSchema: rowSchema,
+    recipe: {
+      version: 1,
+      steps: [
+        { id: "previous", op: "get", table: "exercise", recordId: input("id") },
+        {
+          id: "saved",
+          op: "update",
+          table: "exercise",
+          recordId: input("id"),
+          revision: input("revision"),
+          value: fields(
+            Object.fromEntries(
+              Object.keys(dataSchema.properties).map((key) => [
+                key,
+                ["name", "equipment", "instructions", "archived"].includes(key)
+                  ? input("value", key)
+                  : result("previous", "data", key),
+              ]),
+            ),
+          ),
+        },
+      ],
+      result: result("saved"),
+    },
+  },
+  {
     ...readAction(
       "get-exercise",
       "Read an exercise including its current measurement definitions",

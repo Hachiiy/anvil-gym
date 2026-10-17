@@ -10,6 +10,7 @@ import {
   type NativeDefinitionContext,
 } from "./check-context.js";
 import { checkNativeTree } from "./check-nodes.js";
+import { checkNativeEvents, nativeFailureSchema } from "./check-events.js";
 import { nativeViewSchema, type NativeView } from "./view.js";
 
 function checkDependencies(view: NativeView, check: NativeCheckContext) {
@@ -95,6 +96,18 @@ export function validateNativeView(
     // Forms may begin with missing required fields. Submission uses the complete
     // declared action schema and never treats a partial draft as committed data.
     check.assign(initial, check.scope.forms.get(form.id), at);
+    checkNativeEvents(
+      form.onSuccess ?? [],
+      { ...check.scope, event: action?.resultSchema },
+      check,
+      `${at}.onSuccess`,
+    );
+    checkNativeEvents(
+      form.onFailure ?? [],
+      { ...check.scope, event: nativeFailureSchema },
+      check,
+      `${at}.onFailure`,
+    );
   }
   checkDependencies(view, check);
   checkNativeTree(check);

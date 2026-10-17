@@ -3,6 +3,7 @@ import { metricActions } from "./metric-actions.mjs";
 import { metricCases } from "./metric-fixtures.mjs";
 import { metricVersionAction } from "./metric-versions.mjs";
 import { exerciseActions } from "./exercise-actions.mjs";
+import { authoredMetric } from "./metric-schema.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -29,7 +30,49 @@ export function createGymManifest() {
     },
     assets: [],
     tables,
-    actions: [...metricActions, metricVersionAction, ...exerciseActions],
+    actions: [
+      ...metricActions,
+      metricVersionAction,
+      ...exerciseActions,
+      {
+        name: "new-measurement",
+        summary: "Prepare a new custom measurement with a stable identity",
+        effect: "read",
+        capabilities: [],
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: [],
+          additionalProperties: false,
+        },
+        resultSchema: authoredMetric,
+        recipe: {
+          version: 1,
+          steps: [],
+          result: {
+            op: "object",
+            fields: Object.fromEntries(
+              Object.entries({
+                key: null,
+                label: "Custom measurement",
+                kind: "decimal",
+                dimension: "custom",
+                unit: "unit",
+                loadMeaning: "none",
+                minimum: 0,
+                maximum: 1000000000,
+                precision: 2,
+                required: false,
+                signed: false,
+              }).map(([key, value]) => [
+                key,
+                key === "key" ? { op: "id" } : { op: "literal", value },
+              ]),
+            ),
+          },
+        },
+      },
+    ],
     integrations: [],
     schedules: [],
     ui: [],

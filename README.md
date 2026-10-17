@@ -7,8 +7,14 @@ revising and archiving exercises. Exercise edits assign new metric versions
 when measurement meanings change.
 
 The project is under development; no installable release has been published.
-Workout sessions, routines, the native interface, reports and legacy import
-remain planned. Gym uses Anvil's standard App contracts and Core action gateway
+The first native interface provides an exercise library, custom exercise
+creation, measurement setup and autosaved name/equipment/notes/archive edits.
+Saved measurement definitions are visible; their editing controls, muscle-group
+selection and library pagination remain planned. The initial library shows up
+to 50 active exercises. Existing declared actions support complete exercise
+revisions for authorized agents.
+Workout sessions, routines, reports and legacy import remain planned.
+Gym uses Anvil's standard App contracts and Core action gateway
 and requires an online Anvil connection. Installation does not automatically
 assign agents or enable schedules. All verification fixtures are fictional.
 
@@ -34,8 +40,12 @@ only pinned public npm packages, with no private workspace or registry access.
 `npx anvil-app build . <empty-output-directory>` builds locally; choose an
 empty directory outside this repository. Installed packages contain declarative
 data and approved passive assets, never publisher JavaScript or Angular code.
-The paired `npm run dev` preview and `npm run release` publication workflow
-remain under development and are not available commands yet.
+`npm run dev -- https://anvil.example` connects the public SDK 2.2 preview through
+explicit owner consent, then watches, builds and uploads local changes. Preview
+credentials stay outside source. `npm run connect -- https://anvil.example`
+connects without starting the watcher. No additional local server is needed.
+The `npm run release` publication workflow remains pending; this repository has
+no installable release or discovery topic yet.
 
 ## License
 

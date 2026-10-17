@@ -10,6 +10,7 @@ export * from "./mcp.js";
 export * from "./json.js";
 export * from "./schema-inference.js";
 export * from "./recipe-validation.js";
+export * from "./development.js";
 export * from "./native/check-context.js";
 export * from "./native/check-events.js";
 export * from "./native/check-nodes.js";

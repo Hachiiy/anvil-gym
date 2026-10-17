@@ -5,6 +5,7 @@ import { appJsonSchema } from "../json-schema.js";
 import { nativeExpressionSchema } from "./expressions.js";
 import { nativeNodeSchema } from "./nodes.js";
 import { appJsonValueSchema } from "../json.js";
+import { nativeLocalSequenceSchema } from "./events.js";
 
 const object = appJsonSchema.refine(
   (schema) => schema.type === "object",
@@ -25,6 +26,8 @@ const nativeViewShape = z.strictObject({
         action: appKeySchema,
         initial: nativeExpressionSchema,
         commit: z.enum(["explicit", "autosave"]),
+        onSuccess: nativeLocalSequenceSchema.optional(),
+        onFailure: nativeLocalSequenceSchema.optional(),
       }),
     )
     .max(appPlatformLimits.nativeUi.forms),

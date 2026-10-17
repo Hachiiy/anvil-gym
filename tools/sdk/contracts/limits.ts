@@ -53,6 +53,9 @@ export const appPlatformLimits = Object.freeze({
   reviewDeadlineMs: 120000,
   reviewCandidates: 400,
   reviewAttempts: 3,
+  agentPageItems: 20,
+  agentObservationCharacters: 32000,
+  agentTextCharacters: 4000,
   nativeUi: Object.freeze({
     nodes: 256,
     depth: 12,
@@ -67,4 +70,15 @@ export const appPlatformLimits = Object.freeze({
     renderedNodes: 1000,
     evaluationSteps: 4096,
   }),
+});
+export const appPreviewLimits = /* @__PURE__ */ Object.freeze({
+  uploadSeconds: 30,
+  pairingSeconds: 5 * 60,
+  pendingPairings: 64,
+  sessions: 3,
+  inactiveSeconds: 24 * 60 * 60,
+  cleanupBatch: 20,
+  operations: 10000,
+  datasetRecords: 10000,
+  datasetBytes: 16 * 1024 * 1024,
 });
