@@ -9,6 +9,11 @@ import { workoutExerciseActions } from "./workouts/exercises.mjs";
 import { setActions } from "./workouts/sets.mjs";
 import { catalogActions } from "./catalog-actions.mjs";
 import { catalogSelectionTable } from "./catalog.mjs";
+import { routineActions } from "./routines/actions.mjs";
+import { routineValidationActions } from "./routines/validation.mjs";
+import { routineBlockActions } from "./routines/blocks.mjs";
+import { routineStartActions } from "./routines/start.mjs";
+import { workoutOutlineActions } from "./workouts/outline.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -59,6 +64,11 @@ export function createGymManifest() {
       ...workoutExerciseActions,
       ...setActions,
       ...catalogActions,
+      ...routineActions,
+      ...routineValidationActions,
+      ...routineBlockActions,
+      ...routineStartActions,
+      ...workoutOutlineActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",
@@ -103,6 +113,7 @@ export function createGymManifest() {
     ui: [],
     capabilities: [
       "exercise",
+      "routine",
       "session",
       "block",
       "occurrence",

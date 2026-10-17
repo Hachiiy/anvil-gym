@@ -16,6 +16,7 @@ import {
   source,
   workoutView,
 } from "./workout-helpers.js";
+import { countLabel, join, groupLabel } from "./structure-labels.js";
 
 export const workouts = workoutView({
   id: "workouts",
@@ -37,6 +38,7 @@ export const workouts = workoutView({
           "primary",
         ),
         button("exercise-library", "Exercise library", navigate("exercises")),
+        button("routines", "Routines", navigate("routines")),
       ],
     },
     {
@@ -64,8 +66,7 @@ export const workouts = workoutView({
             component: "empty-state",
             props: {
               title: "No workouts yet",
-              description:
-                "Start your first workout.",
+              description: "Start your first workout.",
             },
           },
         },
@@ -159,7 +160,7 @@ export const workout = workoutView({
   entity: true,
   actions: [
     "get-workout",
-    "list-workout-exercises",
+    "list-workout-outline",
     "edit-workout",
     "finish-workout",
     "abandon-workout",
@@ -168,7 +169,7 @@ export const workout = workoutView({
     source("workout", "get-workout", object({ id: ref("params", ["id"]) })),
     source(
       "exercises",
-      "list-workout-exercises",
+      "list-workout-outline",
       object({ sessionId: ref("params", ["id"]) }),
     ),
   ],
@@ -222,10 +223,36 @@ export const workout = workoutView({
             id: "occurrence-title",
             component: "heading",
             props: {
-              text: ref("item", ["data", "snapshot", "name"], "exercise"),
+              text: join(
+                {
+                  op: "format",
+                  format: "number",
+                  digits: 0,
+                  value: {
+                    op: "add",
+                    left: ref("item", ["data", "position"], "exercise"),
+                    right: literal(1),
+                  },
+                },
+                ref("item", ["data", "snapshot", "name"], "exercise"),
+                ". ",
+              ),
               level: 2,
             },
           },
+          text(
+            "occurrence-structure",
+            join(
+              groupLabel(
+                ref("item", ["kind"], "exercise"),
+                ref("item", ["blockPosition"], "exercise"),
+              ),
+              join(
+                countLabel(ref("item", ["rounds"], "exercise"), "round"),
+                countLabel(ref("item", ["sets"], "exercise"), "set"),
+              ),
+            ),
+          ),
           button(
             "record-exercise",
             "View sets",

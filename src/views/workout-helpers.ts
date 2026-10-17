@@ -15,20 +15,35 @@ import {
 type ViewInput = Omit<
   NativeViewDefinition,
   "state" | "dialogs" | "surface" | "paramsSchema"
-> & { entity?: boolean };
-export function workoutView({ entity = false, ...input }: ViewInput) {
+> & {
+  entity?: boolean;
+  state?: NativeViewDefinition["state"];
+  dialogs?: NativeViewDefinition["dialogs"];
+  paramsSchema?: NativeViewDefinition["paramsSchema"];
+};
+export function workoutView({
+  entity = false,
+  state,
+  dialogs,
+  paramsSchema,
+  ...input
+}: ViewInput) {
   return defineView({
     ...input,
     surface: "app",
-    paramsSchema: entity
-      ? {
-          ...empty,
-          properties: { id: { type: "string", minLength: 36, maxLength: 36 } },
-          required: ["id"],
-        }
-      : empty,
-    state: { schema: empty, initial: {} },
-    dialogs: [],
+    paramsSchema:
+      paramsSchema ??
+      (entity
+        ? {
+            ...empty,
+            properties: {
+              id: { type: "string", minLength: 36, maxLength: 36 },
+            },
+            required: ["id"],
+          }
+        : empty),
+    state: state ?? { schema: empty, initial: {} },
+    dialogs: dialogs ?? [],
   });
 }
 export const source = (id: string, action: string, input: Binding) => ({

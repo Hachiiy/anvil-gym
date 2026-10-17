@@ -33,7 +33,7 @@ export const muscleRoles = object({
   primary: list(choice(...muscles), muscles.length),
   secondary: list(choice(...muscles), muscles.length),
 });
-const exerciseSnapshot = object({
+export const exerciseSnapshot = object({
   exerciseId: reference,
   exerciseRevision: { type: "integer" },
   name: text(120, 1),
@@ -41,19 +41,20 @@ const exerciseSnapshot = object({
   muscles: muscleRoles,
   metrics: metricSnapshot,
 });
-const plannedSet = object({
+export const plannedSet = object({
   kind: choice("warmup", "working", "drop"),
   values: measurements,
 });
-const routineOccurrence = object({
+export const routineOccurrence = object({
   exerciseId: reference,
+  snapshot: exerciseSnapshot,
   // Each occurrence is distinct, even when exerciseId is repeated.
   key: reference,
   sets: list(plannedSet, 20, 1),
   restSeconds: integer(0, 3600),
   notes: text(1000),
 });
-const routineBlock = object({
+export const routineBlock = object({
   key: reference,
   kind: choice("single", "superset", "circuit"),
   rounds: integer(1, 100),

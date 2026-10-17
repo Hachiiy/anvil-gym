@@ -1,10 +1,9 @@
 # Gym for Anvil
 
 Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current foundation defines six exercise/workout data tables
-plus a seventh table for catalog-selection provenance. It uses versioned metrics
-and declarative actions for creating, reading, listing, revising and archiving
-exercises. Exercise edits assign new metric versions when measurement meanings
+measurements. Its current source defines seven data tables, 48 declared Core
+actions and 14 native views, with versioned metrics and editable catalog
+provenance. Exercise edits assign new metric versions when measurement meanings
 change.
 
 The project is under development; no installable release has been published.
@@ -21,10 +20,20 @@ repeating an exercise creates separate sets. Actual values are recorded through
 the same Core actions available to authorized agents. Blank measurements stay
 unknown, explicit zeros are retained, and finishing does not complete unlogged
 sets. Existing set values can be corrected without rewriting the exercise.
-The initial profile allows 50 occurrences per workout and 10 sets per occurrence;
-lists show the latest 50 workouts/exercises. Routines, supersets/circuits,
-history-derived targets, richer history corrections, timers, reports and legacy
-import remain planned.
+The initial workout profile allows 50 occurrences and 10 sets per occurrence;
+lists show the latest 50 workouts/exercises. Routines can be created, listed, read,
+revised and archived. A compact block editor supports single exercises, supersets
+and circuits, rounds, rest, add/remove sets and repeated exercises. Starting a
+routine atomically copies its exercises, rounds and targets into an independent
+workout with blank actuals; exercise and metric snapshots remain pinned per
+occurrence. Routine planned values are available through declared Core actions.
+
+Templates allow up to 30 blocks, 12 occurrences and 20 planned sets. Existing
+64 KiB record and native-form limits still apply. Not every maximum-size template
+can start as one workout under the 50-occurrence, 10-sets-per-occurrence and
+100-row mutation limits. Start validates those limits, reports them clearly and
+rolls back a failed start. Dedicated planned-value UI, history proposals,
+reordering, timers, reports and legacy import remain planned.
 Gym uses Anvil's standard App contracts and Core action gateway
 and requires an online Anvil connection. Installation does not automatically
 assign agents or enable schedules. All verification fixtures are fictional.
@@ -37,12 +46,14 @@ the original source, commit, license and mapping version. A bounded
 “Open exercise” link; repeating a selection opens the same copy without
 creating a duplicate. Other catalog entries do not show an empty unmapped warning.
 The read-only `get-exercise-source` action returns catalog source details. Cardio
-defaults to seconds and meters, and dumbbell load is per dumbbell; both choices remain
-editable. Source shoulder groups remain visibly unmapped because no shoulder
+defaults to seconds and meters, and dumbbell load is per dumbbell; both choices
+remain editable. Source shoulder groups remain visibly unmapped because no shoulder
 subtype is guessed. The source snapshot, provenance metadata and Unlicense are
-included in the repository. Source-free Core cases and desktop/mobile browser
-flows passed. An official immutable release, discovery topic and first
-installation remain pending.
+included in the repository. Real Nest/PGlite Core cases and desktop/mobile browser
+flows passed without a model call. Initial routine principal flows also passed
+Core and desktop/mobile browser proof; broader workout and routine acceptance
+remains open. An official immutable release, discovery topic and first installation
+remain pending.
 
 ## Development
 
@@ -70,9 +81,9 @@ connects without starting the watcher. No additional local server is needed.
 The `npm run release` publication workflow remains pending; this repository has
 no installable release or discovery topic yet.
 
-The catalog-selection table changes the preview table definition fingerprint.
-An existing paired development preview requires an explicit reset or a new
-preview before the new table is available; resetting clears that preview’s records.
+Catalog and routine tables change the preview table definition fingerprint. An
+existing paired development preview requires an explicit reset or a new preview
+before the current schema is available; resetting clears that preview’s records.
 Installed production datasets are separate. The first official installation
 remains an owner action.
 
