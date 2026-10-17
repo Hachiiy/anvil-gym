@@ -35,7 +35,7 @@ export const muscleRoles = object({
 });
 const exerciseSnapshot = object({
   exerciseId: reference,
-  exerciseRevision: integer(1, 1000000000),
+  exerciseRevision: { type: "integer" },
   name: text(120, 1),
   equipment: text(100),
   muscles: muscleRoles,
@@ -79,14 +79,14 @@ export const recordSchemas = {
   session: object(
     {
       title: text(120, 1),
-      startedAt: text(64, 1),
-      timeZone: text(100, 1),
+      startedAt: text(64),
+      timeZone: text(100),
       dateKey: text(10, 10),
       status: choice("active", "completed", "abandoned"),
       notes: text(2000),
       sourceKind: choice("free", "routine", "history", "import"),
       sourceId: reference,
-      endedAt: text(64, 1),
+      endedAt: text(64),
     },
     [
       "title",
@@ -123,7 +123,7 @@ export const recordSchemas = {
       planned: measurements,
       actual: measurements,
       completed: flag,
-      completedAt: text(64, 1),
+      completedAt: text(64),
       notes: text(1000),
     },
     [

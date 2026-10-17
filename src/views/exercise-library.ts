@@ -34,6 +34,7 @@ export const exerciseLibrary = defineView({
     props: { gap: "large" },
     children: [
       heading("library-title", "Exercises", 1),
+      button("workouts", "Workouts", navigate("workouts"), "ghost"),
       text(
         "library-help",
         "Your exercises, with the measurements that matter to you.",

@@ -13,7 +13,16 @@ Saved measurement definitions are visible; their editing controls, muscle-group
 selection and library pagination remain planned. The initial library shows up
 to 50 active exercises. Existing declared actions support complete exercise
 revisions for authorized agents.
-Workout sessions, routines, reports and legacy import remain planned.
+Free workouts now have a native start/add-exercise/record-set/finish flow.
+Each exercise occurrence keeps a snapshot of its name and measurement meanings;
+repeating an exercise creates separate sets. Actual values are recorded through
+the same Core actions available to authorized agents. Blank measurements stay
+unknown, explicit zeros are retained, and finishing does not complete unlogged
+sets. Existing set values can be corrected without rewriting the exercise.
+The initial profile allows 50 occurrences per workout and 10 sets per occurrence;
+lists show the latest 50 workouts/exercises. Routines, supersets/circuits,
+history-derived targets, richer history corrections, timers, reports and legacy
+import remain planned.
 Gym uses Anvil's standard App contracts and Core action gateway
 and requires an online Anvil connection. Installation does not automatically
 assign agents or enable schedules. All verification fixtures are fictional.
@@ -46,6 +55,11 @@ credentials stay outside source. `npm run connect -- https://anvil.example`
 connects without starting the watcher. No additional local server is needed.
 The `npm run release` publication workflow remains pending; this repository has
 no installable release or discovery topic yet.
+
+The workout development revision changes the table definition fingerprint.
+An existing paired development preview therefore requires explicit
+`npm run dev -- --reset`; this clears that preview's records. Installed
+production datasets are separate.
 
 ## License
 

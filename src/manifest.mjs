@@ -4,6 +4,9 @@ import { metricCases } from "./metric-fixtures.mjs";
 import { metricVersionAction } from "./metric-versions.mjs";
 import { exerciseActions } from "./exercise-actions.mjs";
 import { authoredMetric } from "./metric-schema.mjs";
+import { sessionActions } from "./workouts/sessions.mjs";
+import { workoutExerciseActions } from "./workouts/exercises.mjs";
+import { setActions } from "./workouts/sets.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -34,6 +37,9 @@ export function createGymManifest() {
       ...metricActions,
       metricVersionAction,
       ...exerciseActions,
+      ...sessionActions,
+      ...workoutExerciseActions,
+      ...setActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",
@@ -76,7 +82,9 @@ export function createGymManifest() {
     integrations: [],
     schedules: [],
     ui: [],
-    capabilities: ["data.exercise.read", "data.exercise.write"],
+    capabilities: ["exercise", "session", "block", "occurrence", "set"].flatMap(
+      (table) => [`data.${table}.read`, `data.${table}.write`],
+    ),
     dependencies: [],
     dataSources: [],
     migrations: [],
