@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import { withAuthorTools } from "./author-tools.mjs";
-import { tables } from "./domain-schema.mjs";
 import { createGymManifest } from "./manifest.mjs";
 import { checkCatalog } from "./check-catalog.mjs";
 
@@ -37,11 +36,12 @@ async function checkDirectory(directory) {
   }
 }
 for (const directory of ["src", "tools/sdk"]) await checkDirectory(directory);
+const manifest = createGymManifest();
 await withAuthorTools(({ appJsonSchema, parseAppManifest }) => {
-  for (const table of tables) appJsonSchema.parse(table.schema);
-  parseAppManifest(createGymManifest());
+  for (const table of manifest.tables) appJsonSchema.parse(table.schema);
+  parseAppManifest(manifest);
 });
 const catalogSize = await checkCatalog();
 process.stdout.write(
-  `Validated Gym's declarative manifest, ${tables.length} App table schemas, ${catalogSize} pinned public catalog entries and standalone author tools.\n`,
+  `Validated Gym's declarative manifest, ${manifest.tables.length} App table schemas, ${catalogSize} pinned public catalog entries and standalone author tools.\n`,
 );

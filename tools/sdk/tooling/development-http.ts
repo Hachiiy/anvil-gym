@@ -158,7 +158,11 @@ export class DevelopmentHttp {
           const { done, value } = await reader.read();
           if (done) break;
           size += value.byteLength;
-          if (size > 1024 * 1024)
+          if (
+            size >
+            appPlatformLimits.manifestBytes +
+              appPlatformLimits.resultEnvelopeBytes
+          )
             throw Error("Oversized development response.");
           chunks.push(value);
         }

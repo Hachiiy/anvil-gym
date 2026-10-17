@@ -12,7 +12,6 @@ import {
   object,
   ref,
   select,
-  text,
   type Binding,
 } from "./helpers.js";
 import { measurementEditor } from "./measurements.js";
@@ -149,12 +148,6 @@ export function exerciseEditor(editing: boolean) {
           "ghost",
         ),
         heading("editor-title", editing ? "Exercise" : "New exercise", 1),
-        text(
-          "editor-help",
-          editing
-            ? "Changes save automatically. Workout history keeps its original measurements."
-            : "Create any exercise and choose what you want to measure.",
-        ),
         grid("exercise-fields", [
           field("exercise-name", "Name", ["value", "name"]),
           select(

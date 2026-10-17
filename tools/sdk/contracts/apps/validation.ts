@@ -2,13 +2,13 @@ import { appManifestSchema, type AppManifest } from "./manifest.js";
 import { validateAppValue } from "./json-schema.js";
 import { validateAppRecipe } from "./recipe-validation.js";
 
-import { assertAppJson } from "./json.js";
+import { assertAppManifestJson } from "./json.js";
 import { appPlatformLimits as limits } from "../limits.js";
 import { appOriginKey } from "./identity.js";
 import { validateNativeView } from "./native/validation.js";
 
 export function parseAppManifest(value: unknown): AppManifest {
-  assertAppJson(value);
+  assertAppManifestJson(value);
   const manifest = appManifestSchema.parse(value);
   const errors = validateAppManifest(manifest);
   if (errors.length) throw new Error(errors.join("\n"));

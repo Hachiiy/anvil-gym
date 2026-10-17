@@ -1,6 +1,6 @@
 import type { NativeNode } from "@anvil/app-sdk/author";
 import { muscles } from "../domain-schema.mjs";
-import { button, literal, ref, stack, text, type Binding } from "./helpers.js";
+import { button, literal, ref, stack, type Binding } from "./helpers.js";
 
 const roleValues = (role: string) => ({
   op: "coalesce" as const,
@@ -82,7 +82,6 @@ export const muscleEditor: NativeNode = stack("muscle-editor", [
     component: "condition",
     props: { when: ref("state", ["muscleOptions"]) },
     then: stack("muscle-picker", [
-      text("muscle-help", "Select a role for each muscle."),
       {
         id: "muscle-list",
         component: "list",

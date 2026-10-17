@@ -1,5 +1,5 @@
 import {
-  assertAppJson,
+  assertAppManifestJson,
   nativeComponentMajors,
   nativeViewDefinitionSchema,
   parseAppManifest,
@@ -23,7 +23,7 @@ export type {
 } from "../contracts/apps/index.js";
 
 export function defineView(input: NativeViewDefinition): NativeView {
-  assertAppJson(input);
+  assertAppManifestJson(input);
   const view = nativeViewDefinitionSchema.parse(input);
   const requiresComponents: Record<string, number> = {};
   const pending: NativeNode[] = [view.root, ...view.dialogs.map((d) => d.root)];

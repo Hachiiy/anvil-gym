@@ -95,7 +95,13 @@ export const button = (
   label: string,
   onPress: Extract<NativeNode, { component: "button" }>["onPress"],
   tone: "primary" | "secondary" | "ghost" = "secondary",
-): NativeNode => ({ id, component: "button", props: { label, tone }, onPress });
+  disabled?: boolean | Binding,
+): NativeNode => ({
+  id,
+  component: "button",
+  props: { label, tone, ...(disabled === undefined ? {} : { disabled }) },
+  onPress,
+});
 export const navigate = (
   view: string,
   params: Binding = literal({}),

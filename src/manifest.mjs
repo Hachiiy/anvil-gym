@@ -7,6 +7,8 @@ import { authoredMetric } from "./metric-schema.mjs";
 import { sessionActions } from "./workouts/sessions.mjs";
 import { workoutExerciseActions } from "./workouts/exercises.mjs";
 import { setActions } from "./workouts/sets.mjs";
+import { catalogActions } from "./catalog-actions.mjs";
+import { catalogSelectionTable } from "./catalog.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -31,8 +33,24 @@ export function createGymManifest() {
       nativeUi: 1,
       designComponents: 1,
     },
-    assets: [],
-    tables,
+    assets: [
+      {
+        path: "data/starter-catalog.json",
+        mediaType: "application/json",
+        role: "data",
+      },
+      {
+        path: "data/starter-catalog.provenance.json",
+        mediaType: "application/json",
+        role: "data",
+      },
+      {
+        path: "data/free-exercise-db-LICENSE.txt",
+        mediaType: "text/plain",
+        role: "documentation",
+      },
+    ],
+    tables: [...tables, catalogSelectionTable],
     actions: [
       ...metricActions,
       metricVersionAction,
@@ -40,6 +58,7 @@ export function createGymManifest() {
       ...sessionActions,
       ...workoutExerciseActions,
       ...setActions,
+      ...catalogActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",
@@ -82,9 +101,14 @@ export function createGymManifest() {
     integrations: [],
     schedules: [],
     ui: [],
-    capabilities: ["exercise", "session", "block", "occurrence", "set"].flatMap(
-      (table) => [`data.${table}.read`, `data.${table}.write`],
-    ),
+    capabilities: [
+      "exercise",
+      "session",
+      "block",
+      "occurrence",
+      "set",
+      "catalog-selection",
+    ].flatMap((table) => [`data.${table}.read`, `data.${table}.write`]),
     dependencies: [],
     dataSources: [],
     migrations: [],

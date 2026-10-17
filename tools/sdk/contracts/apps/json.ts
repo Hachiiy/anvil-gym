@@ -4,7 +4,7 @@ import { appPlatformLimits as limits } from "../limits.js";
 const unsafe = new Set(["__proto__", "prototype", "constructor"]);
 export function assertAppJson(
   value: unknown,
-  maxBytes: number = limits.manifestBytes,
+  maxBytes: number = limits.jsonBytes,
   shape: { nodes: number; depth: number } = {
     nodes: limits.jsonNodes,
     depth: limits.jsonDepth,
@@ -66,12 +66,22 @@ export function assertAppJson(
   }
 }
 
-export function appJsonValueSchema(maxBytes: number) {
+export function assertAppManifestJson(value: unknown) {
+  assertAppJson(value, limits.manifestBytes, {
+    nodes: limits.manifestJsonNodes,
+    depth: limits.jsonDepth,
+  });
+}
+
+export function appJsonValueSchema(
+  maxBytes: number,
+  nodes: number = limits.jsonNodes,
+) {
   return z
     .unknown()
     .superRefine((value, context) => {
       try {
-        assertAppJson(value, maxBytes);
+        assertAppJson(value, maxBytes, { nodes, depth: limits.jsonDepth });
       } catch {
         context.addIssue({
           code: "custom",

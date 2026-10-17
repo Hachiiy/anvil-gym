@@ -16,3 +16,7 @@
   part of verification.
 - Publish only reviewed immutable standard releases. Catalog publication must
   not install Gym or start an installation review.
+
+- Keep the interface minimal and intuitive: concise labels, useful data and clear
+  actions. Put explanations in contextual help or documentation, not persistent
+  introductory paragraphs. Preserve meaningful units, status and error feedback.

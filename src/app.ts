@@ -5,6 +5,7 @@ import { exerciseEditor } from "./views/exercise-editor.js";
 import { workouts, startWorkout, workout } from "./views/workouts.js";
 import { chooseExercise, workoutExercise } from "./views/workout-exercises.js";
 import { workoutSet } from "./views/workout-set.js";
+import { starterCatalog } from "./views/starter-catalog.js";
 
 // Existing business definitions keep their stable table/action/metric identities.
 // Native views are added through the same public author SDK.
@@ -18,6 +19,7 @@ export default defineApp({
     workoutExercise,
     workoutSet,
     exerciseLibrary,
+    starterCatalog,
     exerciseEditor(false),
     exerciseEditor(true),
   ],

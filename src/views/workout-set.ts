@@ -79,7 +79,7 @@ export const workoutSet = workoutView({
     },
     text(
       "set-help",
-      "Leave unknown values blank. Zero is a recorded value. Changes save automatically.",
+      "Blank = unrecorded.",
     ),
     {
       id: "set-measurements",

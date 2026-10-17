@@ -1,5 +1,5 @@
 import { appPlatformLimits } from "../../limits.js";
-import { assertAppJson } from "../json.js";
+import { assertAppJson, assertAppManifestJson } from "../json.js";
 import { validateAppValue } from "../json-schema.js";
 import {
   nativeExpressionChildren,
@@ -117,7 +117,7 @@ export function parseNativeViews(
   input: unknown,
   definition: NativeDefinitionContext,
 ): NativeView[] {
-  assertAppJson(input);
+  assertAppManifestJson(input);
   if (!Array.isArray(input) || input.length > appPlatformLimits.widgets)
     throw new Error("Invalid native view count.");
   const views = input.map((value) => nativeViewSchema.parse(value));

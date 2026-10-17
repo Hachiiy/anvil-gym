@@ -25,10 +25,6 @@ export const workouts = workoutView({
   sources: [source("workouts", "list-workouts", literal({}))],
   root: page("workouts", [
     heading("workouts-heading", "Workouts", 1),
-    text(
-      "workouts-help",
-      "Start a workout, record what you do and keep your history.",
-    ),
     {
       id: "workout-navigation",
       component: "row",
@@ -67,9 +63,9 @@ export const workouts = workoutView({
             id: "workouts-empty",
             component: "empty-state",
             props: {
-              title: "Your next workout starts here",
+              title: "No workouts yet",
               description:
-                "Free workouts can use any exercise and custom measurements.",
+                "Start your first workout.",
             },
           },
         },
@@ -147,10 +143,6 @@ export const startWorkout = workoutView({
   root: page("start-workout", [
     button("back-workouts", "Workouts", navigate("workouts"), "ghost"),
     heading("start-heading", "Start workout", 1),
-    text(
-      "start-help",
-      "Add exercises as you go. Planned and performed values stay separate.",
-    ),
     formField("workout-title", "Title", "workout", ["title"]),
     button(
       "begin-workout",

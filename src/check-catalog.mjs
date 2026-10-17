@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import { sourceMuscles, starterCatalog } from "./catalog.mjs";
 
 export async function checkCatalog() {
   const directory = new URL("../data/", import.meta.url);
@@ -38,5 +39,16 @@ export async function checkCatalog() {
     )
   )
     throw new Error("Starter catalog shape or source identities are invalid.");
+  if (
+    catalog.some((entry) =>
+      [...entry.primaryMuscles, ...entry.secondaryMuscles].some(
+        (label) => !Object.hasOwn(sourceMuscles, label),
+      ),
+    ) ||
+    starterCatalog.length !== catalog.length
+  )
+    throw new Error(
+      "Every source muscle label needs an explicit mapping or an unmapped declaration.",
+    );
   return catalog.length;
 }

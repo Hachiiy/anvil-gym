@@ -41,7 +41,7 @@ export async function runAppConformance(
   return {
     profile: "anvil-app-conformance/1",
     packageVersion: manifest.package.version,
-    manifestSha256: appSha256(canonicalAppJson(manifest)),
+    manifestSha256: appSha256(canonicalAppJson(manifest, "manifest")),
     format: "passed",
     behavior:
       !invoke || !cases.length

@@ -6,7 +6,11 @@ import {
   appDevelopmentProjectSchema,
 } from "../contracts/apps/index.js";
 import { appPlatformLimits as limits } from "../contracts/limits.js";
-import { buildAppPackage, readAppJson } from "../src/package.js";
+import {
+  buildAppPackage,
+  readAppJson,
+  readAppManifestJson,
+} from "../src/package.js";
 import { checkAppTypes } from "./author-types.js";
 import { compileAppSource } from "./author-source.js";
 
@@ -34,7 +38,7 @@ export async function readAuthorPackage(root: string, compile?: typeof build) {
   const manifest = compile
     ? await compileAppSource(join(root, "src/app.ts"), compile)
     : parseAppManifest(
-        readAppJson(await readAuthorFile(root, "manifest.json")),
+        readAppManifestJson(await readAuthorFile(root, "manifest.json")),
       );
   const assets = new Map<string, Uint8Array>();
   for (const asset of manifest.assets)

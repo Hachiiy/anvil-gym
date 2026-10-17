@@ -35,15 +35,16 @@ export const exerciseLibrary = defineView({
     children: [
       heading("library-title", "Exercises", 1),
       button("workouts", "Workouts", navigate("workouts"), "ghost"),
-      text(
-        "library-help",
-        "Your exercises, with the measurements that matter to you.",
-      ),
       button(
         "new-exercise",
         "New exercise",
         navigate("new-exercise"),
         "primary",
+      ),
+      button(
+        "starter-exercises",
+        "Browse starter exercises",
+        navigate("starter-catalog"),
       ),
       {
         id: "library-loading",
@@ -105,9 +106,9 @@ export const exerciseLibrary = defineView({
               id: "no-exercises",
               component: "empty-state",
               props: {
-                title: "Start with your first exercise",
+                title: "No exercises yet",
                 description:
-                  "Strength, cardio or something you invented. Add it once and reuse it in your workouts.",
+                  "Create one or browse starter exercises.",
               },
             },
           },

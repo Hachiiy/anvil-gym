@@ -6,7 +6,6 @@ import {
   object,
   ref,
   stack,
-  text,
 } from "./helpers.js";
 import {
   entityLink,
@@ -29,10 +28,6 @@ export const chooseExercise = workoutView({
   root: page("choose-exercise", [
     button("back-workout", "Workout", navigate("workout", paramsId()), "ghost"),
     heading("choose-heading", "Add exercise", 1),
-    text(
-      "choose-help",
-      "Each occurrence keeps its own measurements and sets, even when you repeat an exercise.",
-    ),
     button("exercise-library", "Exercise library", navigate("exercises")),
     {
       id: "exercise-picker",
@@ -114,10 +109,6 @@ export const workoutExercise = workoutView({
         level: 1,
       },
     },
-    text(
-      "snapshot-help",
-      "This workout keeps the exercise and measurement settings it started with.",
-    ),
     {
       id: "sets",
       component: "list",

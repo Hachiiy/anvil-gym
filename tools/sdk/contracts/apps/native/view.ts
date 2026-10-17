@@ -61,6 +61,7 @@ export type NativeViewDefinition = z.infer<typeof nativeViewDefinitionSchema>;
 
 export const nativeViewSchema = appJsonValueSchema(
   appPlatformLimits.manifestBytes,
+  appPlatformLimits.manifestJsonNodes,
 )
   .transform((value): unknown => value)
   .pipe(nativeViewShape);
