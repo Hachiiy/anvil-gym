@@ -36,7 +36,7 @@ export function createGymManifest() {
       version: "0.1.0",
       summary: "Strength, cardio and custom exercise measurements",
       description:
-        "A Gym App using shared actions and managed persistent data. Development version; no installable release is published yet.",
+        "Track strength, cardio and custom exercise measurements with reusable routines and shared Anvil actions.",
       categories: ["fitness"],
       license: "Apache-2.0",
     },

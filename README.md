@@ -1,139 +1,68 @@
 # Gym for Anvil
 
-Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current source defines nine data tables, 113 declared Core
-actions and 18 native views, with versioned metrics and editable catalog
-provenance. Exercise edits assign new metric versions when measurement meanings
-change.
+Gym 0.1.0 is an installable MVP for strength, basic cardio and custom exercise
+measurements. It uses Anvil's native components and theme, with no iframe or
+publisher code running in the installed App.
 
-The project is under development; no installable release has been published.
-The first native interface provides an exercise library, custom exercise
-creation and autosaved exercise editing, including measurement definitions,
-units, weight meanings, primary/secondary muscle groups and archive state.
-Advanced measurement settings and muscle selection expand when needed.
-Library pagination remains planned. The initial library shows up
-to 50 active exercises. Existing declared actions support complete exercise
-revisions for authorized agents.
-Free workouts now have a native start/add-exercise/record-set/finish flow.
-Each exercise occurrence keeps a snapshot of its name and measurement meanings;
-repeating an exercise creates separate sets. Actual values are recorded through
-the same Core actions available to authorized agents. Blank measurements stay
-unknown, explicit zeros are retained, and finishing does not complete unlogged
-sets. Existing set values can be corrected without rewriting the exercise.
-The initial workout profile allows 50 occurrences and 10 sets per occurrence;
-libraries read 50 entries per page with Previous, Next and First controls.
-History filters completed/abandoned workouts; exercise libraries filter type and
-archive state, and routine libraries filter archive state. Lists return compact
-canonical summaries; detail actions retain full definitions. Routines can be created, listed, read,
-revised and archived. A compact block editor supports single exercises, supersets
-and circuits, rounds, rest, add/remove sets and repeated exercises. Starting a
-routine atomically copies its exercises, rounds and targets into an independent
-workout with blank actuals; exercise and metric snapshots remain pinned per
-occurrence. Routine planned values are available through declared Core actions.
+## Install
 
-Templates allow up to 30 blocks, 12 occurrences and 20 planned sets. Existing
-64 KiB record and native-form limits still apply. Not every maximum-size template
-can start as one workout under the 50-occurrence, 10-sets-per-occurrence and
-100-row mutation limits. Start validates those limits, reports them clearly and
-rolls back a failed start. Set options now open a separate Targets editor with
-autosave and an explicit Use previous action. It considers the 20 most recent
-earlier completed workouts, keeps set types distinct and copies only values whose
-pinned measurement definitions match. Actuals and completion stay unchanged;
-new or changed measurements remain blank. It does not infer progression.
-Completed workouts offer **Repeat workout**. The new session preserves grouped
-structure, rounds and pinned exercise definitions. Completed actuals become
-editable targets; unfinished sets retain their existing targets. All new actuals
-start blank and sets remain uncompleted. The source workout is unchanged and
-the copy respects the same atomic workout limits as routine starts.
-Set order opens a compact organizer after pending measurements save. Move up or
-down swaps two sets atomically; Undo uses their returned revisions and refuses
-to overwrite a subsequent edit. IDs, targets, actuals and completion timestamps
-remain unchanged. Set options include a concise Remove confirmation and durable
-Undo removal. Undo survives navigation and reload, restores the same canonical
-set, and refuses to overwrite later changes to its exercise or remaining sets.
-New sets append after the highest stored position; displayed numbers follow the
-visible order. Completed workouts support adding or removing sets without
-changing their lifecycle. Workout Details opens a compact structure view for
-removing an exercise or an entire superset/circuit with its sets. Removing the
-last exercise also removes its empty group. Details also offers Remove workout;
-the library retains its Undo across reload. All removals and restorations are
-atomic, retain canonical IDs and data, and check observed revisions. A removal
-record consumes one of the existing 100 mutation rows, so a workout at that
-boundary needs a smaller removal first. Workout structure also supports group ordering; each exercise opens its Group
-screen for ordering, moving to a superset/circuit and autosaved group settings.
-Order changes affect the actual workout, retain performed sets and measurements,
-and have durable revision-checked Undo. An unchanged settings form creates no
-new arrangement. Single-exercise groups have direct order controls too. Layout
-validation rejects duplicate IDs and stale observed revisions before applying
-changes. Only changed layout rows are written; the existing 100-row transaction
-bound includes the arrangement and session records. Rewrites affecting more
-than 98 layout rows must be split into smaller operations. Organization reads
-return compact identity, membership and pinned-name summaries; full snapshots
-remain available through the logging actions. Empty groups remain available for
-reuse or explicit removal.
-Reports and legacy import remain planned. Workout and rest timers
-are outside the product scope; duration is still a configurable measurement.
-Gym uses Anvil's standard App contracts and Core action gateway
-and requires an online Anvil connection. Installation does not automatically
-assign agents or enable schedules. All verification fixtures are fictional.
+Open **Anvil → Apps → Market**, find **Gym**, choose an available reviewing agent
+and select **Install**. Accept the permissions after the exact package
+review completes. If Gym is missing, refresh the Market catalog.
 
-The catalog owner flow now browses 19 pinned entries from
-[free-exercise-db](https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5),
-then adds an editable copy as a Gym exercise. The catalog-selection record keeps
-the original source, commit, license and mapping version. A bounded
-`list-starter-copies` read shows existing adapted exercises as “Added” with an
-“Open exercise” link; repeating a selection opens the same copy without
-creating a duplicate. Other catalog entries do not show an empty unmapped warning.
-The read-only `get-exercise-source` action returns catalog source details. Cardio
-defaults to seconds and meters, and dumbbell load is per dumbbell; both choices
-remain editable. Source shoulder groups remain visibly unmapped because no shoulder
-subtype is guessed. The source snapshot, provenance metadata and Unlicense are
-included in the repository. Real Nest/PGlite Core cases and desktop/mobile browser
-flows passed without a model call. Initial routine principal flows also passed
-Core and desktop/mobile browser proof; broader workout and routine acceptance
-remains open. An official immutable release, discovery topic and first installation
-remain pending.
+Installation keeps data separate from other Apps and does not grant an agent
+access. Enable Gym separately for each agent that should use it. The owner
+performs the first official installation.
+
+## MVP scope
+
+- Exercise library with 19 starter entries, custom exercises and measurements.
+- Reusable routines with individual exercises, supersets and circuits.
+- Online workout logging, separate planned and actual values, and corrections.
+- Paged history, repeat workout, ordering, removal and revision-checked Undo.
+- Shared Core actions for manual controls and authorized agents.
+
+Measurements preserve units, load meanings and versions. Unknown values stay
+blank; recorded zeros remain observations. Later exercise edits do not rewrite
+completed workouts. No workout, rest or countdown timer is included; duration
+remains an explicit measurement for cardio and custom exercises.
+
+The initial workout profile supports 50 exercise occurrences and 10 sets per
+occurrence, within Anvil's existing data and transaction bounds. Libraries page
+through 50 entries. Templates support 30 blocks, 12 occurrences per block and
+20 planned sets, but a started workout must fit the workout and transaction
+bounds. Oversized starts fail atomically rather than creating partial workouts.
+
+Saved reports, muscle maps, Gym chat widgets, legacy import/export and external
+integrations are deferred. Offline editing is not supported.
 
 ## Development
 
-Requires Node.js 22 or later. Run `npm ci` and `npm run check` to type-check
-the TypeScript App entry, validate the manifest 2.0 package, catalog integrity
-and pinned standalone SDK 2 tools. Existing JavaScript business modules keep
-their schema/recipe validation; they have not all migrated to TypeScript.
-These checks do not execute business actions. The scenarios in
-[src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
-disposable Core adapter; they do not contain a second recipe interpreter.
+Use Node.js 22 or later, then `npm ci` and `npm run check`. The standalone SDK
+2.10.0 is included through the local dependency [tools/sdk](tools/sdk); no private
+workspace or npm registry is needed. Its clean 50-file hash snapshot is checked
+by the author validation. See [tool provenance](tools/README.md).
 
-The public author SDK 2.10.0 is a licensed source distribution in
-[tools/sdk](tools/sdk), refreshed from a clean committed product export and
-verified against its 50-file hash snapshot. Native manifests remain capped
-at 4 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
-installed through a local file dependency. It needs
-only pinned public npm packages, with no private workspace or registry access.
-`npx anvil-app build . <empty-output-directory>` builds locally; choose an
-empty directory outside this repository. Installed packages contain declarative
-data and approved passive assets, never publisher JavaScript or Angular code.
-`npm run dev -- <anvil-origin>` connects the public SDK preview through
-explicit owner consent, then watches, builds and uploads local changes. Preview
-credentials stay outside source. `npm run connect -- https://anvil.example`
-connects without starting the watcher. No additional local server is needed.
-The author SDK `npm run release` command builds locally and publishes an exact
-immutable release through local GitHub CLI authentication. It requires clean,
-committed and pushed source and enabled immutable releases. Saved publication
-identity stays outside the repository. Static conformance is distinct from Core
-and model proof. Publication does not install Gym, assign agents or start a
-review. Official publication and discovery remain pending while the App is under
-development; its first official installation is performed by the owner.
+- `npm run dev -- https://anvil.example` pairs an isolated preview and watches
+  local source. Pairing requires explicit owner consent; credentials stay outside
+  the repository. An existing preview with an older table layout needs a new
+  preview or explicit reset, which clears only that preview's records.
+- `npm run build -- <empty-output-directory>` compiles a package outside the
+  author repository. Installed packages contain declarative data and approved
+  passive assets, never publisher JavaScript, CSS or Angular code.
+- `npm run release` publishes the exact clean, committed and pushed source through
+  GitHub CLI authentication. Immutable releases must be enabled. Publication
+  does not install the App, grant agent access or start a model call.
 
-Catalog, routine, removal and arrangement tables change the preview table definition fingerprint. An
-existing paired development preview requires an explicit reset or a new preview
-before the current schema is available; resetting clears that preview’s records.
-Installed production datasets are separate. The first official installation
-remains an owner action.
+Static conformance validates the package; it does not execute business actions
+or prove a model claim. The MVP retains the previously accepted Core and
+responsive browser behavior. Broader feature acceptance remains in progress.
+All verification fixtures are fictional.
 
-## License
+## License and starter catalog
 
-Gym package code is Apache-2.0; see [LICENSE](LICENSE). The public catalog source
-snapshot uses the [Unlicense](data/free-exercise-db-LICENSE.txt), with pinned
-[source metadata](data/starter-catalog.provenance.json). Standalone author-tool
-provenance is documented in [tools/README.md](tools/README.md).
+Gym code is [Apache-2.0](LICENSE). The 19 pinned starter entries come from
+[free-exercise-db](https://github.com/yuhonas/free-exercise-db/tree/f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5),
+with its [Unlicense](data/free-exercise-db-LICENSE.txt) and
+[source metadata](data/starter-catalog.provenance.json). Catalog source values
+and adaptation provenance are retained; unmapped shoulder subtypes are not guessed.
