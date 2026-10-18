@@ -4,7 +4,7 @@ import {
   metricDefinition,
   metricSnapshot,
 } from "../metric-schema.mjs";
-import { flag, list, object, reference, text } from "../schema.mjs";
+import { flag, integer, list, object, reference, text } from "../schema.mjs";
 import {
   assertion,
   batch,
@@ -19,9 +19,9 @@ import {
   mapped,
   readAction,
   result,
+  oneOf,
 } from "../expressions.mjs";
 import {
-  activeSession,
   create,
   entityInput,
   get,
@@ -149,8 +149,21 @@ export const setActions = [
       steps: [
         get("occurrence", "occurrence", input("occurrenceId")),
         get("session", "session", result("occurrence", "data", "sessionId")),
-        activeSession(),
-        query("previous", "set", "occurrenceId", input("occurrenceId"), 10),
+        assertion(
+          "editable-workout",
+          oneOf(result("session", "data", "status"), ["active", "completed"]),
+          "This workout is abandoned.",
+        ),
+        {
+          ...query(
+            "previous",
+            "set",
+            "occurrenceId",
+            result("occurrence", "id"),
+            10,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         assertion(
           "set-budget",
           binary("less", length(result("previous", "records")), literal(10)),
@@ -160,9 +173,36 @@ export const setActions = [
           "saved",
           "set",
           fields({
-            occurrenceId: input("occurrenceId"),
+            occurrenceId: result("occurrence", "id"),
             sessionId: result("occurrence", "data", "sessionId"),
-            position: length(result("previous", "records")),
+            position: {
+              op: "check-number",
+              minimum: 0,
+              maximum: 1000000,
+              integer: true,
+              value: {
+                op: "if",
+                condition: binary(
+                  "greater",
+                  length(result("previous", "records")),
+                  literal(0),
+                ),
+                then: binary(
+                  "add",
+                  {
+                    op: "at",
+                    source: mapped(
+                      result("previous", "records"),
+                      item("data", "position"),
+                      10,
+                    ),
+                    index: literal(0),
+                  },
+                  literal(1),
+                ),
+                else: literal(0),
+              },
+            },
             round: literal(1),
             kind: literal("working"),
             planned: literal([]),
@@ -197,6 +237,27 @@ export const setActions = [
       [
         get("set", "set", input("id")),
         get("occurrence", "occurrence", result("set", "data", "occurrenceId")),
+        {
+          ...query(
+            "preceding",
+            "set",
+            "occurrenceId",
+            result("set", "data", "occurrenceId"),
+            10,
+          ),
+          where: [
+            {
+              field: ["occurrenceId"],
+              compare: "eq",
+              value: result("set", "data", "occurrenceId"),
+            },
+            {
+              field: ["position"],
+              compare: "lt",
+              value: result("set", "data", "position"),
+            },
+          ],
+        },
         batch(
           "drafts",
           "prepare-set-measurement",
@@ -221,12 +282,24 @@ export const setActions = [
         occurrence: rowSchema("occurrence"),
         values: draftMeasurements,
         plannedValues: draftMeasurements,
+        ordinal: integer(1, 10),
       }),
       fields({
         set: result("set"),
         occurrence: result("occurrence"),
         values: result("drafts", "results"),
         plannedValues: result("planned-drafts", "results"),
+        ordinal: {
+          op: "check-number",
+          minimum: 1,
+          maximum: 10,
+          integer: true,
+          value: binary(
+            "add",
+            length(result("preceding", "records")),
+            literal(1),
+          ),
+        },
       }),
     ),
     capabilities: readCaps("set", "occurrence"),

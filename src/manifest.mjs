@@ -19,6 +19,7 @@ import { targetActions } from "./workouts/targets.mjs";
 import { historyStartAction } from "./workouts/history-start.mjs";
 import { historyCopyActions } from "./workouts/history-copy.mjs";
 import { orderActions } from "./workouts/order.mjs";
+import { removalActions } from "./workouts/removals.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -79,6 +80,7 @@ export function createGymManifest() {
       historyStartAction,
       ...historyCopyActions,
       ...orderActions,
+      ...removalActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",
@@ -129,6 +131,7 @@ export function createGymManifest() {
       "occurrence",
       "set",
       "catalog-selection",
+      "removal",
     ].flatMap((table) => [`data.${table}.read`, `data.${table}.write`]),
     dependencies: [],
     dataSources: [],

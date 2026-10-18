@@ -61,11 +61,7 @@ export const workoutTargets = workoutView({
               op: "format",
               format: "number",
               digits: 0,
-              value: {
-                op: "add",
-                left: ref("source", ["set", "data", "position"], "editor"),
-                right: literal(1),
-              },
+              value: ref("source", ["ordinal"], "editor"),
             },
             " ",
           ),

@@ -1,5 +1,5 @@
 import { measurements, metricSnapshot } from "../metric-schema.mjs";
-import { list, object, reference } from "../schema.mjs";
+import { integer, list, object, reference } from "../schema.mjs";
 import {
   assertion,
   any,
@@ -86,12 +86,14 @@ export const loggingActions = [
         block: rowSchema("block"),
         records: list(rowSchema("set"), 10),
         sets: list(editorSchema, 10),
+        ordinals: list(integer(1, 10), 10, 10),
       }),
       fields({
         exercise: result("exercise"),
         block: result("block"),
         records: result("sets", "records"),
         sets: result("drafts", "results"),
+        ordinals: literal(Array.from({ length: 10 }, (_, index) => index + 1)),
       }),
     ),
     capabilities: readCaps("occurrence", "block", "set"),

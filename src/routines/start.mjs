@@ -11,6 +11,7 @@ import {
   item,
   length,
   literal,
+  mapped,
   result,
 } from "../expressions.mjs";
 import {
@@ -375,7 +376,16 @@ export const routineStartActions = [
           },
           "The round is outside this routine block.",
         ),
-        query("previous", "set", "occurrenceId", input("occurrenceId"), 10),
+        {
+          ...query(
+            "previous",
+            "set",
+            "occurrenceId",
+            result("occurrence", "id"),
+            10,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         assertion(
           "set-budget",
           binary("less", length(result("previous", "records")), literal(10)),
@@ -398,6 +408,18 @@ export const routineStartActions = [
           ),
           "This round already has its planned sets.",
         ),
+        letValue(
+          "planned-position",
+          binary(
+            "add",
+            binary(
+              "multiply",
+              binary("subtract", input("round"), literal(1)),
+              length(result("occurrence-source", "sets")),
+            ),
+            length(result("in-round")),
+          ),
+        ),
         create(
           "saved",
           "set",
@@ -409,15 +431,36 @@ export const routineStartActions = [
               minimum: 0,
               maximum: 1000000,
               integer: true,
-              value: binary(
-                "add",
-                binary(
-                  "multiply",
-                  binary("subtract", input("round"), literal(1)),
-                  length(result("occurrence-source", "sets")),
+              value: {
+                op: "if",
+                condition: binary(
+                  "greater",
+                  length(
+                    filtered(
+                      result("previous", "records"),
+                      equal(
+                        item("data", "position"),
+                        result("planned-position"),
+                      ),
+                      10,
+                    ),
+                  ),
+                  literal(0),
                 ),
-                length(result("in-round")),
-              ),
+                then: binary(
+                  "add",
+                  index(
+                    mapped(
+                      result("previous", "records"),
+                      item("data", "position"),
+                      10,
+                    ),
+                    literal(0),
+                  ),
+                  literal(1),
+                ),
+                else: result("planned-position"),
+              },
             },
             round: input("round"),
             kind: input("plan", "kind"),

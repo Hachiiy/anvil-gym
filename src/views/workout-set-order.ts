@@ -8,7 +8,7 @@ import {
   ref,
   type Binding,
 } from "./helpers.js";
-import { setLabel, source, workoutView } from "./workout-helpers.js";
+import { source, workoutView } from "./workout-helpers.js";
 import { join } from "./structure-labels.js";
 
 const row = (name: string, key: string) => ref("item", [key], name);
@@ -50,34 +50,29 @@ const swap = (first: Binding, second: Binding, undo = false): NativeEvent[] => [
     onFailure: [],
   },
 ];
+const ordinal = ref("source", ["ordinals", { itemIndex: "set" }], "sets");
 const neighbour = (direction: "up" | "down"): NativeNode => ({
-  id: `move-${direction}-candidate`,
-  component: "list",
-  props: {
-    items: {
-      op: "filter",
-      source: ref("source", ["records"], "sets"),
-      as: "candidate",
-      maxItems: 10,
-      value: {
-        op: "equal",
-        left: ref("item", ["data", "position"], "candidate"),
-        right: {
-          op: direction === "up" ? "subtract" : "add",
-          left: ref("item", ["data", "position"], "set"),
-          right: literal(1),
-        },
-      },
-    },
-    as: "neighbour",
-    key: ["id"],
-    maxItems: 1,
-  },
-  template: button(
+  ...button(
     `move-${direction}`,
     direction === "up" ? "Move up" : "Move down",
-    swap(identity("set"), identity("neighbour")),
+    swap(identity("set"), {
+      op: "coalesce",
+      left: ref(
+        "source",
+        [direction === "up" ? "previous" : "next", { itemIndex: "set" }],
+        "sets",
+      ),
+      right: identity("set"),
+    }),
   ),
+  visible:
+    direction === "up"
+      ? { op: "greater", left: ordinal, right: literal(1) }
+      : {
+          op: "less",
+          left: ordinal,
+          right: { op: "length", value: ref("source", ["records"], "sets") },
+        },
 });
 
 export const workoutSetOrder = workoutView({
@@ -105,16 +100,11 @@ export const workoutSetOrder = workoutView({
     },
     initial: emptyUndo,
   },
-  actions: ["get-workout-exercise", "list-workout-sets", "swap-workout-sets"],
+  actions: ["get-workout-set-order", "swap-workout-sets"],
   sources: [
     source(
-      "exercise",
-      "get-workout-exercise",
-      object({ id: ref("params", ["id"]) }),
-    ),
-    source(
       "sets",
-      "list-workout-sets",
+      "get-workout-set-order",
       object({ occurrenceId: ref("params", ["id"]) }),
     ),
   ],
@@ -135,7 +125,7 @@ export const workoutSetOrder = workoutView({
         id: "exercise-name",
         component: "text",
         props: {
-          text: ref("source", ["data", "snapshot", "name"], "exercise"),
+          text: ref("source", ["exercise", "data", "snapshot", "name"], "sets"),
         },
       },
       {
@@ -184,7 +174,19 @@ export const workoutSetOrder = workoutView({
                     {
                       id: "set-heading",
                       component: "heading",
-                      props: { text: setLabel(), level: 2 },
+                      props: {
+                        text: {
+                          op: "concat",
+                          left: literal("Set "),
+                          right: {
+                            op: "format",
+                            format: "number",
+                            value: ordinal,
+                            digits: 0,
+                          },
+                        },
+                        level: 2,
+                      },
                     },
                     {
                       id: "set-kind",

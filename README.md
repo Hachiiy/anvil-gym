@@ -1,7 +1,7 @@
 # Gym for Anvil
 
 Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current source defines seven data tables, 65 declared Core
+measurements. Its current source defines eight data tables, 73 declared Core
 actions and 16 native views, with versioned metrics and editable catalog
 provenance. Exercise edits assign new metric versions when measurement meanings
 change.
@@ -45,8 +45,13 @@ the copy respects the same atomic workout limits as routine starts.
 Set order opens a compact organizer after pending measurements save. Move up or
 down swaps two sets atomically; Undo uses their returned revisions and refuses
 to overwrite a subsequent edit. IDs, targets, actuals and completion timestamps
-remain unchanged. Exercise/block organization, removal, reports and legacy import
-remain planned. Workout and rest timers
+remain unchanged. Set options include a concise Remove confirmation and durable
+Undo removal. Undo survives navigation and reload, restores the same canonical
+set, and refuses to overwrite later changes to its exercise or remaining sets.
+New sets append after the highest stored position; displayed numbers follow the
+visible order. Completed workouts support adding or removing sets without
+changing their lifecycle. Exercise/block organization and removal, reports and
+legacy import remain planned. Workout and rest timers
 are outside the product scope; duration is still a configurable measurement.
 Gym uses Anvil's standard App contracts and Core action gateway
 and requires an online Anvil connection. Installation does not automatically
@@ -100,7 +105,7 @@ and model proof. Publication does not install Gym, assign agents or start a
 review. Official publication and discovery remain pending while the App is under
 development; its first official installation is performed by the owner.
 
-Catalog and routine tables change the preview table definition fingerprint. An
+Catalog, routine and removal tables change the preview table definition fingerprint. An
 existing paired development preview requires an explicit reset or a new preview
 before the current schema is available; resetting clears that preview’s records.
 Installed production datasets are separate. The first official installation

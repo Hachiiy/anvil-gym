@@ -10,6 +10,13 @@ import {
 } from "./helpers.js";
 import { paramsId, source, workoutView } from "./workout-helpers.js";
 import { countLabel, groupLabel, join } from "./structure-labels.js";
+import {
+  removalDialog,
+  removalInitial,
+  removalProperties,
+  removalUndo,
+  removeSetButton,
+} from "./workout-removal.js";
 
 const safe = (left: Binding, right: Binding): Binding => ({
   op: "coalesce",
@@ -31,14 +38,7 @@ const detailsOpen: Binding = {
   left: ref("state", ["details"]),
   right: ref("item", ["id"], "set"),
 };
-const setNumber: Binding = {
-  op: "add",
-  left: safe(
-    sourceValue("records", { itemIndex: "set" }, "data", "position"),
-    literal(0),
-  ),
-  right: literal(1),
-};
+const setNumber: Binding = sourceValue("ordinals", { itemIndex: "set" });
 const metric = (index: number | "extra"): NativeNode => {
   const definition = (key: string, fallback: Binding): Binding =>
     index === "extra"
@@ -119,14 +119,33 @@ export const workoutLogging = workoutView({
   state: {
     schema: {
       type: "object",
-      properties: { details: { type: "string", maxLength: 36 } },
-      required: ["details"],
+      properties: {
+        details: { type: "string", maxLength: 36 },
+        ...removalProperties,
+      },
+      required: ["details", ...Object.keys(removalProperties)],
       additionalProperties: false,
     },
-    initial: { details: "" },
+    initial: { details: "", ...removalInitial },
   },
-  actions: ["get-workout-logging", "record-workout-logging", "add-workout-set"],
-  sources: [source("logging", "get-workout-logging", paramsId())],
+  actions: [
+    "get-workout-logging",
+    "record-workout-logging",
+    "add-workout-set",
+    "remove-workout-set",
+    "undo-workout-removal",
+    "dismiss-workout-removal",
+    "latest-set-removal",
+  ],
+  sources: [
+    source("logging", "get-workout-logging", paramsId()),
+    source(
+      "removals",
+      "latest-set-removal",
+      object({ occurrenceId: ref("params", ["id"]) }),
+    ),
+  ],
+  dialogs: [removalDialog],
   forms: [
     {
       id: "logging",
@@ -341,6 +360,7 @@ export const workoutLogging = workoutView({
                       multiline: true,
                     },
                   },
+                  removeSetButton(setNumber),
                 ],
               },
             },
@@ -348,6 +368,7 @@ export const workoutLogging = workoutView({
           ],
         },
       },
+      removalUndo,
       button("add-set", "Add set", [
         submit,
         {

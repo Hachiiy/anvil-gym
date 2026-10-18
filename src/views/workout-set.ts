@@ -53,7 +53,11 @@ export const workoutSet = workoutView({
       id: "set-heading",
       component: "heading",
       props: {
-        text: ref("source", ["occurrence", "data", "snapshot", "name"], "editor"),
+        text: ref(
+          "source",
+          ["occurrence", "data", "snapshot", "name"],
+          "editor",
+        ),
         level: 1,
       },
     },
@@ -67,20 +71,13 @@ export const workoutSet = workoutView({
           right: {
             op: "format",
             format: "number",
-            value: {
-              op: "add",
-              left: ref("source", ["set", "data", "position"], "editor"),
-              right: literal(1),
-            },
+            value: ref("source", ["ordinal"], "editor"),
             digits: 0,
           },
         },
       },
     },
-    text(
-      "set-help",
-      "Blank = unrecorded.",
-    ),
+    text("set-help", "Blank = unrecorded."),
     {
       id: "set-measurements",
       component: "list",

@@ -60,6 +60,16 @@ export const routineBlock = object({
   rounds: integer(1, 100),
   occurrences: list(routineOccurrence, 12, 1),
 });
+export const recordReference = object({
+  id: reference,
+  revision: { type: "integer" },
+});
+export const removalRecords = object({
+  sets: list(list(recordReference, 10), 50),
+  occurrences: list(recordReference, 50),
+  blocks: list(recordReference, 50),
+  sessions: list(recordReference, 1),
+});
 
 export const recordSchemas = {
   exercise: object({
@@ -139,6 +149,22 @@ export const recordSchemas = {
       "notes",
     ],
   ),
+  removal: object({
+    scope: choice("set", "occurrence", "block", "session"),
+    contextId: reference,
+    contextRevision: { type: "integer" },
+    sessionId: reference,
+    records: removalRecords,
+    remaining: list(recordReference, 50),
+    status: choice(
+      "preparing",
+      "available",
+      "restoring",
+      "applied",
+      "dismissed",
+    ),
+    createdAt: text(64),
+  }),
 };
 
 const references = {
@@ -159,6 +185,8 @@ const indexes = {
   block: ["sessionId"],
   occurrence: ["sessionId", "blockId"],
   set: ["sessionId", "occurrenceId"],
+  // Removal metadata names retained tombstones, not live foreign keys.
+  removal: ["contextId", "status", "createdAt"],
 };
 export const tables = Object.entries(recordSchemas).map(([name, schema]) => ({
   name,
