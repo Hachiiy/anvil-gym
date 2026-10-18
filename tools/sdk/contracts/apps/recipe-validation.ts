@@ -273,6 +273,7 @@ export function validateAppRecipe(
       case "get":
       case "create":
       case "update":
+      case "restore":
       case "delete": {
         const table = manifest.tables.find(
           (table) => table.name === step.table,
@@ -303,7 +304,11 @@ export function validateAppRecipe(
           result.properties!.nextCursor = string;
         } else {
           expect(expression(step.recordId), ["string"]);
-          if (step.op === "update" || step.op === "delete")
+          if (
+            step.op === "update" ||
+            step.op === "delete" ||
+            step.op === "restore"
+          )
             expect(expression(step.revision), ["integer", "number"]);
           if (step.op === "create" || step.op === "update") {
             const value = expression(step.value);

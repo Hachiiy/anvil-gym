@@ -79,7 +79,7 @@ These checks do not execute business actions. The scenarios in
 [src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
 disposable Core adapter; they do not contain a second recipe interpreter.
 
-The public author SDK 2.6.0 is a licensed source distribution in
+The public author SDK 2.7.0 is a licensed source distribution in
 [tools/sdk](tools/sdk), refreshed from a clean committed product export and
 verified against its 49-file hash snapshot. Native manifests remain capped
 at 2 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
@@ -88,11 +88,11 @@ only pinned public npm packages, with no private workspace or registry access.
 `npx anvil-app build . <empty-output-directory>` builds locally; choose an
 empty directory outside this repository. Installed packages contain declarative
 data and approved passive assets, never publisher JavaScript or Angular code.
-`npm run dev -- <anvil-origin>` connects the public SDK 2.5 preview through
+`npm run dev -- <anvil-origin>` connects the public SDK preview through
 explicit owner consent, then watches, builds and uploads local changes. Preview
 credentials stay outside source. `npm run connect -- https://anvil.example`
 connects without starting the watcher. No additional local server is needed.
-The SDK 2.5 `npm run release` command builds locally and publishes an exact
+The author SDK `npm run release` command builds locally and publishes an exact
 immutable release through local GitHub CLI authentication. It requires clean,
 committed and pushed source and enabled immutable releases. Saved publication
 identity stays outside the repository. Static conformance is distinct from Core

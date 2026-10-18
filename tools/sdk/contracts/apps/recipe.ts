@@ -222,6 +222,13 @@ export const appStepSchema = z.discriminatedUnion("op", [
   }),
   z.strictObject({
     id: appKeySchema,
+    op: z.literal("restore"),
+    table: appKeySchema,
+    recordId: appExpressionSchema,
+    revision: appExpressionSchema,
+  }),
+  z.strictObject({
+    id: appKeySchema,
     op: z.literal("call"),
     dependency: appKeySchema,
     action: appKeySchema,
