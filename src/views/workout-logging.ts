@@ -205,15 +205,7 @@ export const workoutLogging = workoutView({
         id: "sets",
         component: "list",
         props: {
-          items: {
-            op: "map",
-            source: safe(ref("form", ["sets"], "logging"), literal([])),
-            as: "logging-set",
-            maxItems: 10,
-            value: object({
-              id: safe(ref("item", ["id"], "logging-set"), literal("")),
-            }),
-          },
+          items: sourceValue("records"),
           as: "set",
           key: ["id"],
           maxItems: 10,
@@ -274,6 +266,18 @@ export const workoutLogging = workoutView({
                 component: "stack",
                 props: { gap: "normal" },
                 children: [
+                  button(
+                    "edit-targets",
+                    "Targets",
+                    [
+                      submit,
+                      ...navigate(
+                        "workout-targets",
+                        object({ id: ref("item", ["id"], "set") }),
+                      ),
+                    ],
+                    "ghost",
+                  ),
                   {
                     id: "other-metrics",
                     component: "list",

@@ -1,5 +1,9 @@
 import { recordSchemas } from "../domain-schema.mjs";
-import { measuredValue, metricSnapshot } from "../metric-schema.mjs";
+import {
+  measuredValue,
+  metricDefinition,
+  metricSnapshot,
+} from "../metric-schema.mjs";
 import { flag, list, object, reference, text } from "../schema.mjs";
 import {
   assertion,
@@ -46,6 +50,14 @@ const draftValue = fields({
   key: input("definition", "key"),
   unit: input("definition", "unit"),
 });
+const metricMeaning = (source) =>
+  fields(
+    Object.fromEntries(
+      Object.keys(metricDefinition.properties)
+        .filter((key) => key !== "label")
+        .map((key) => [key, source(key)]),
+    ),
+  );
 export const actualValues = mapped(
   filtered(input("values"), { op: "has", source: item(), path: ["value"] }),
   fields({
@@ -59,10 +71,14 @@ export const setActions = [
   readAction(
     "prepare-set-measurement",
     "Prepare one input without inventing an unrecorded value",
-    object({
-      definition: metricSnapshot.items,
-      values: recordSchemas.set.properties.actual,
-    }),
+    object(
+      {
+        definition: metricSnapshot.items,
+        values: recordSchemas.set.properties.actual,
+        historicalDefinitions: metricSnapshot,
+      },
+      ["definition", "values"],
+    ),
     [
       {
         id: "matching",
@@ -72,11 +88,41 @@ export const setActions = [
           equal(item("key"), input("definition", "key")),
         ),
       },
+      {
+        id: "compatible",
+        op: "let",
+        value: {
+          op: "if",
+          condition: {
+            op: "has",
+            source: input(),
+            path: ["historicalDefinitions"],
+          },
+          then: binary(
+            "greater",
+            length(
+              filtered(
+                input("historicalDefinitions"),
+                equal(
+                  metricMeaning((key) => item(key)),
+                  metricMeaning((key) => input("definition", key)),
+                ),
+              ),
+            ),
+            literal(0),
+          ),
+          else: literal(true),
+        },
+      },
     ],
     draftMeasurement,
     {
       op: "if",
-      condition: binary("greater", length(result("matching")), literal(0)),
+      condition: binary(
+        "and",
+        result("compatible"),
+        binary("greater", length(result("matching")), literal(0)),
+      ),
       then: fields({
         ...draftValue.fields,
         value: {
@@ -160,16 +206,27 @@ export const setActions = [
             values: result("set", "data", "actual"),
           }),
         ),
+        batch(
+          "planned-drafts",
+          "prepare-set-measurement",
+          result("occurrence", "data", "snapshot", "metrics"),
+          fields({
+            definition: item(),
+            values: result("set", "data", "planned"),
+          }),
+        ),
       ],
       object({
         set: rowSchema("set"),
         occurrence: rowSchema("occurrence"),
         values: draftMeasurements,
+        plannedValues: draftMeasurements,
       }),
       fields({
         set: result("set"),
         occurrence: result("occurrence"),
         values: result("drafts", "results"),
+        plannedValues: result("planned-drafts", "results"),
       }),
     ),
     capabilities: readCaps("set", "occurrence"),
