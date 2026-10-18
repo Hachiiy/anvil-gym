@@ -1,6 +1,6 @@
 # Gym for Anvil
 
-Gym 0.1.1 is an installable MVP for strength, basic cardio and custom exercise
+Gym 0.1.2 is an installable MVP for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 
@@ -67,6 +67,6 @@ with its [Unlicense](data/free-exercise-db-LICENSE.txt) and
 [source metadata](data/starter-catalog.provenance.json). Catalog source values
 and adaptation provenance are retained; unmapped shoulder subtypes are not guessed.
 
-Store artwork is original vector source rendered to PNG. Screenshots capture the
+Store icon and cover are raster artwork generated with OpenAI image generation. Screenshots capture the
 real native Gym interface using fictional preview data. Store assets are passive,
 digest-bound release files; browsing them does not install Gym.
