@@ -358,6 +358,18 @@ export const workoutLogging = workoutView({
           onFailure: [],
         },
       ]),
+      button(
+        "order-sets",
+        "Set order",
+        [
+          submit,
+          ...navigate(
+            "workout-set-order",
+            object({ id: ref("params", ["id"]) }),
+          ),
+        ],
+        "ghost",
+      ),
     ],
   },
 });

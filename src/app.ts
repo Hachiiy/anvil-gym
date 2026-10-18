@@ -7,6 +7,7 @@ import { chooseExercise } from "./views/workout-exercises.js";
 import { workoutLogging } from "./views/workout-logging.js";
 import { workoutSet } from "./views/workout-set.js";
 import { workoutTargets } from "./views/workout-targets.js";
+import { workoutSetOrder } from "./views/workout-set-order.js";
 import { starterCatalog } from "./views/starter-catalog.js";
 import {
   routineLibrary,
@@ -27,6 +28,7 @@ export default defineApp({
     workoutLogging,
     workoutSet,
     workoutTargets,
+    workoutSetOrder,
     routineLibrary,
     newRoutine,
     routineEditor,
