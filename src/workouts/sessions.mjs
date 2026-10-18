@@ -61,6 +61,28 @@ export const sessionActions = [
   },
   {
     ...readAction(
+      "list-active-workouts",
+      "List ongoing workouts separately from the bounded recent history",
+      object({}),
+      [
+        {
+          id: "page",
+          op: "query",
+          table: "session",
+          where: [
+            { field: ["status"], compare: "eq", value: literal("active") },
+          ],
+          order: [{ field: ["startedAt"], direction: "desc" }],
+          limit: 50,
+        },
+      ],
+      pageSchema("session"),
+      result("page"),
+    ),
+    capabilities: readCaps("session"),
+  },
+  {
+    ...readAction(
       "list-workouts",
       "List the newest workouts",
       object({}),

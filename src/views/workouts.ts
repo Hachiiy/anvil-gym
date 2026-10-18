@@ -5,7 +5,6 @@ import {
   navigate,
   object,
   ref,
-  stack,
   text,
 } from "./helpers.js";
 import {
@@ -18,105 +17,7 @@ import {
 } from "./workout-helpers.js";
 import { countLabel, join, groupLabel } from "./structure-labels.js";
 
-export const workouts = workoutView({
-  id: "workouts",
-  label: "Workouts",
-  forms: [],
-  actions: ["list-workouts"],
-  sources: [source("workouts", "list-workouts", literal({}))],
-  root: page("workouts", [
-    heading("workouts-heading", "Workouts", 1),
-    {
-      id: "workout-navigation",
-      component: "row",
-      props: { gap: "small", wrap: true },
-      children: [
-        button(
-          "start-workout",
-          "Start workout",
-          navigate("start-workout"),
-          "primary",
-        ),
-        button("exercise-library", "Exercise library", navigate("exercises")),
-        button("routines", "Routines", navigate("routines")),
-      ],
-    },
-    {
-      id: "workouts-ready",
-      component: "condition",
-      props: {
-        when: { op: "present", value: ref("source", ["records"], "workouts") },
-      },
-      then: stack("workout-results", [
-        {
-          id: "no-workouts",
-          component: "condition",
-          props: {
-            when: {
-              op: "equal",
-              left: {
-                op: "length",
-                value: ref("source", ["records"], "workouts"),
-              },
-              right: literal(0),
-            },
-          },
-          then: {
-            id: "workouts-empty",
-            component: "empty-state",
-            props: {
-              title: "No workouts yet",
-              description: "Start your first workout.",
-            },
-          },
-        },
-        {
-          id: "workout-list",
-          component: "list",
-          props: {
-            items: ref("source", ["records"], "workouts"),
-            as: "workout",
-            key: ["id"],
-            maxItems: 50,
-          },
-          template: {
-            id: "workout-card",
-            component: "card",
-            props: { gap: "small" },
-            children: [
-              {
-                id: "workout-title",
-                component: "heading",
-                props: {
-                  text: ref("item", ["data", "title"], "workout"),
-                  level: 2,
-                },
-              },
-              text("workout-date", {
-                op: "format",
-                format: "date",
-                value: ref("item", ["data", "startedAt"], "workout"),
-              }),
-              {
-                id: "workout-status",
-                component: "badge",
-                props: { text: ref("item", ["data", "status"], "workout") },
-              },
-              button(
-                "open-workout",
-                "Open workout",
-                navigate(
-                  "workout",
-                  object({ id: ref("item", ["id"], "workout") }),
-                ),
-              ),
-            ],
-          },
-        },
-      ]),
-    },
-  ]),
-});
+export { workouts } from "./workout-library.js";
 
 export const startWorkout = workoutView({
   id: "start-workout",
@@ -187,20 +88,62 @@ export const workout = workoutView({
       onSuccess: revisionHook("workout"),
     },
   ],
+  dialogs: [
+    {
+      id: "workout-details",
+      label: "Workout details",
+      root: {
+        id: "details-fields",
+        component: "stack",
+        props: { gap: "normal" },
+        children: [
+          formField("workout-title", "Title", "workout", ["title"]),
+          formField("workout-notes", "Notes", "workout", ["notes"], true),
+        ],
+      },
+    },
+  ],
   root: page("workout", [
-    button("back-workouts", "Workouts", navigate("workouts"), "ghost"),
-    heading("workout-heading", "Workout", 1),
+    button(
+      "back-workouts",
+      "Workouts",
+      [
+        { op: "submit-form", form: "workout", onSuccess: [], onFailure: [] },
+        ...navigate("workouts"),
+      ],
+      "ghost",
+    ),
+    {
+      id: "workout-heading",
+      component: "heading",
+      props: {
+        text: {
+          op: "coalesce",
+          left: ref("form", ["title"], "workout"),
+          right: literal("Workout"),
+        },
+        level: 1,
+      },
+    },
     {
       id: "workout-status",
       component: "badge",
       props: { text: ref("source", ["data", "status"], "workout") },
     },
-    formField("workout-title", "Title", "workout", ["title"]),
+    button(
+      "workout-details",
+      "Details",
+      [{ op: "open-dialog", dialog: "workout-details" }],
+      "ghost",
+    ),
     {
       ...button(
         "add-exercise",
         "Add exercise",
-        navigate("choose-exercise", object({ id: ref("params", ["id"]) })),
+        [
+          { op: "submit-form", form: "workout", onSuccess: [], onFailure: [] },
+          ...navigate("choose-exercise", object({ id: ref("params", ["id"]) })),
+        ],
         "primary",
       ),
       visible: active,
@@ -253,18 +196,21 @@ export const workout = workoutView({
               ),
             ),
           ),
-          button(
-            "record-exercise",
-            "View sets",
-            navigate(
+          button("record-exercise", "Record sets", [
+            {
+              op: "submit-form",
+              form: "workout",
+              onSuccess: [],
+              onFailure: [],
+            },
+            ...navigate(
               "workout-exercise",
               object({ id: ref("item", ["id"], "exercise") }),
             ),
-          ),
+          ]),
         ],
       },
     },
-    formField("workout-notes", "Workout notes", "workout", ["notes"], true),
     {
       ...button(
         "finish-workout",
@@ -276,7 +222,11 @@ export const workout = workoutView({
             action: "finish-workout",
             input: object({
               id: ref("source", ["id"], "workout"),
-              revision: ref("source", ["revision"], "workout"),
+              revision: {
+                op: "coalesce",
+                left: ref("form", ["revision"], "workout"),
+                right: ref("source", ["revision"], "workout"),
+              },
             }),
             onSuccess: [{ op: "refresh-source", source: "workout" }],
             onFailure: [],

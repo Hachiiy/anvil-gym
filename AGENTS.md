@@ -20,3 +20,5 @@
 - Keep the interface minimal and intuitive: concise labels, useful data and clear
   actions. Put explanations in contextual help or documentation, not persistent
   introductory paragraphs. Preserve meaningful units, status and error feedback.
+- Do not add workout, rest or countdown timers. Explicit duration measurements
+  remain supported for exercises such as cardio.

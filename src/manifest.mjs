@@ -14,6 +14,7 @@ import { routineValidationActions } from "./routines/validation.mjs";
 import { routineBlockActions } from "./routines/blocks.mjs";
 import { routineStartActions } from "./routines/start.mjs";
 import { workoutOutlineActions } from "./workouts/outline.mjs";
+import { loggingActions } from "./workouts/logging.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -69,6 +70,7 @@ export function createGymManifest() {
       ...routineBlockActions,
       ...routineStartActions,
       ...workoutOutlineActions,
+      ...loggingActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",

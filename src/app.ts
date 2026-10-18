@@ -3,7 +3,8 @@ import { createGymManifest } from "./manifest.mjs";
 import { exerciseLibrary } from "./views/exercise-library.js";
 import { exerciseEditor } from "./views/exercise-editor.js";
 import { workouts, startWorkout, workout } from "./views/workouts.js";
-import { chooseExercise, workoutExercise } from "./views/workout-exercises.js";
+import { chooseExercise } from "./views/workout-exercises.js";
+import { workoutLogging } from "./views/workout-logging.js";
 import { workoutSet } from "./views/workout-set.js";
 import { starterCatalog } from "./views/starter-catalog.js";
 import {
@@ -22,7 +23,7 @@ export default defineApp({
     startWorkout,
     workout,
     chooseExercise,
-    workoutExercise,
+    workoutLogging,
     workoutSet,
     routineLibrary,
     newRoutine,

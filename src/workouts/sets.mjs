@@ -33,12 +33,20 @@ export const draftMeasurement = object(measuredValue.properties, [
   "key",
   "unit",
 ]);
-const draftMeasurements = list(draftMeasurement, 12);
+export const draftMeasurements = list(draftMeasurement, 12);
+export const setEditSchema = object({
+  id: reference,
+  revision: { type: "integer" },
+  values: draftMeasurements,
+  completed: flag,
+  kind: recordSchemas.set.properties.kind,
+  notes: text(1000),
+});
 const draftValue = fields({
   key: input("definition", "key"),
   unit: input("definition", "unit"),
 });
-const actualValues = mapped(
+export const actualValues = mapped(
   filtered(input("values"), { op: "has", source: item(), path: ["value"] }),
   fields({
     key: item("key"),
@@ -172,14 +180,7 @@ export const setActions = [
       "Record or correct actual values against this set's pinned measurement meanings",
     effect: "transaction",
     capabilities: [...readCaps("set", "occurrence"), ...writeCaps("set")],
-    inputSchema: object({
-      id: reference,
-      revision: { type: "integer" },
-      values: draftMeasurements,
-      completed: flag,
-      kind: recordSchemas.set.properties.kind,
-      notes: text(1000),
-    }),
+    inputSchema: setEditSchema,
     resultSchema: rowSchema("set"),
     recipe: {
       version: 1,
