@@ -1,3 +1,4 @@
+import { libraryActions } from "./library-actions.mjs";
 import { groupEditorAction } from "./workouts/group-editor.mjs";
 import { arrangementActions } from "./workouts/arrangement.mjs";
 import { structureActions } from "./workouts/structure.mjs";
@@ -66,6 +67,7 @@ export function createGymManifest() {
     ],
     tables: [...tables, catalogSelectionTable],
     actions: [
+      ...libraryActions,
       ...metricActions,
       metricVersionAction,
       ...exerciseActions,

@@ -1,3 +1,8 @@
+import {
+  libraryPage,
+  libraryRowsStep,
+  libraryResult,
+} from "../library-summary.mjs";
 import { recordSchemas, routineBlock } from "../domain-schema.mjs";
 import { flag, object, reference, text } from "../schema.mjs";
 import {
@@ -135,9 +140,10 @@ export const routineActions = [
           order: [{ field: ["name"], direction: "asc" }],
           limit: 50,
         },
+        libraryRowsStep("routine"),
       ],
-      pageSchema("routine"),
-      result("page"),
+      libraryPage("routine"),
+      libraryResult(),
     ),
     capabilities: readCaps("routine"),
   },

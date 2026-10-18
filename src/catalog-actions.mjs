@@ -92,11 +92,11 @@ export const catalogActions = [
     "get-starter-exercise",
     "Read one starter exercise with its original source labels",
     catalogInput,
-    [],
+    [invoke("catalog", "list-starter-exercises", literal({}))],
     catalogEntrySchema,
     at(
       filtered(
-        literal(starterCatalog),
+        result("catalog", "records"),
         equal(item("sourceId"), input("sourceId")),
         19,
       ),

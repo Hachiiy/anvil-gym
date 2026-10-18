@@ -71,12 +71,6 @@ export function exercisePicker(mode: "routine" | "block"): NativeNode {
           ],
         },
       },
-      button(
-        "close-routine-picker",
-        "Cancel",
-        [{ op: "close-dialog", dialog: "exercise-picker" }],
-        "ghost",
-      ),
     ],
   };
 }

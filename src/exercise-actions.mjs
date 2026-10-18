@@ -1,3 +1,8 @@
+import {
+  libraryPage,
+  libraryRowsStep,
+  libraryResult,
+} from "./library-summary.mjs";
 import { recordSchemas, muscles, muscleRoles } from "./domain-schema.mjs";
 import { authoredMetrics } from "./metric-schema.mjs";
 import { choice, flag, list, object, reference, text } from "./schema.mjs";
@@ -238,7 +243,14 @@ export const exerciseActions = [
     ...readAction(
       next ? "next-exercises" : "list-exercises",
       "List exercise definitions, including custom exercises",
-      object({ archived: flag, ...(next ? { cursor: text(16000, 1) } : {}) }),
+      object(
+        {
+          archived: flag,
+          category: choice("all", "strength", "cardio", "custom"),
+          ...(next ? { cursor: text(65536) } : {}),
+        },
+        ["archived", ...(next ? ["cursor"] : [])],
+      ),
       [
         {
           id: "page",
@@ -246,16 +258,33 @@ export const exerciseActions = [
           table: "exercise",
           where: [
             { field: ["archived"], compare: "eq", value: input("archived") },
+            {
+              field: ["category"],
+              compare: "in",
+              value: filtered(
+                literal(["strength", "cardio", "custom"]),
+                {
+                  op: "if",
+                  condition: { op: "has", source: input(), path: ["category"] },
+                  then: {
+                    op: "or",
+                    left: equal(input("category"), literal("all")),
+                    right: equal(item(), input("category")),
+                  },
+                  else: literal(true),
+                },
+                3,
+              ),
+            },
           ],
           order: [{ field: ["name"], direction: "asc" }],
           limit: 50,
           ...(next ? { cursor: input("cursor") } : {}),
         },
+        libraryRowsStep("exercise"),
       ],
-      object({ records: list(rowSchema, 50), nextCursor: text(65536) }, [
-        "records",
-      ]),
-      result("page"),
+      libraryPage("exercise"),
+      libraryResult(),
     ),
     capabilities: [capability("read")],
   })),

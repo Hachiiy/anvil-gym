@@ -4,7 +4,7 @@ export const appPlatformLimits = Object.freeze({
   expandedBytes: 64 * 1024 * 1024,
   archiveFiles: 256,
   fileBytes: 8 * 1024 * 1024,
-  manifestBytes: 2 * 1024 * 1024,
+  manifestBytes: 4 * 1024 * 1024,
   manifestJsonNodes: 128000,
   jsonBytes: 512 * 1024,
   pathCharacters: 200,

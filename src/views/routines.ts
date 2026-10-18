@@ -1,3 +1,11 @@
+import {
+  routinePaging,
+  filterButton,
+  libraryFilterBadges,
+  libraryFeedback,
+  libraryItems,
+  libraryPageControls,
+} from "./library-pages.js";
 import { button, heading, literal, navigate, object, ref } from "./helpers.js";
 import {
   formField,
@@ -14,18 +22,32 @@ import { blocksSummary } from "./routine-summary.js";
 export const routineLibrary = workoutView({
   id: "routines",
   label: "Routines",
-  forms: [],
-  actions: ["list-routines"],
-  sources: [source("routines", "list-routines", literal({ archived: false }))],
+  ...routinePaging,
   root: page("routines", [
     button("back-workouts", "Workouts", navigate("workouts"), "ghost"),
     heading("routines-heading", "Routines", 1),
-    button("new-routine", "New routine", navigate("new-routine"), "primary"),
+    {
+      id: "routine-library-actions",
+      component: "row",
+      props: { gap: "small", wrap: true },
+      children: [
+        button(
+          "new-routine",
+          "New routine",
+          navigate("new-routine"),
+          "primary",
+        ),
+        filterButton,
+        ...libraryFilterBadges("archived"),
+      ],
+    },
+    libraryPageControls("top"),
+    ...libraryFeedback("No routines"),
     {
       id: "routine-list",
       component: "list",
       props: {
-        items: ref("source", ["records"], "routines"),
+        items: libraryItems,
         as: "routine",
         key: ["id"],
         maxItems: 50,
@@ -48,6 +70,7 @@ export const routineLibrary = workoutView({
         ],
       },
     },
+    libraryPageControls("bottom"),
   ]),
 });
 

@@ -1,7 +1,7 @@
 # Gym for Anvil
 
 Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current source defines nine data tables, 107 declared Core
+measurements. Its current source defines nine data tables, 113 declared Core
 actions and 18 native views, with versioned metrics and editable catalog
 provenance. Exercise edits assign new metric versions when measurement meanings
 change.
@@ -21,7 +21,10 @@ the same Core actions available to authorized agents. Blank measurements stay
 unknown, explicit zeros are retained, and finishing does not complete unlogged
 sets. Existing set values can be corrected without rewriting the exercise.
 The initial workout profile allows 50 occurrences and 10 sets per occurrence;
-lists show the latest 50 workouts/exercises. Routines can be created, listed, read,
+libraries read 50 entries per page with Previous, Next and First controls.
+History filters completed/abandoned workouts; exercise libraries filter type and
+archive state, and routine libraries filter archive state. Lists return compact
+canonical summaries; detail actions retain full definitions. Routines can be created, listed, read,
 revised and archived. A compact block editor supports single exercises, supersets
 and circuits, rounds, rest, add/remove sets and repeated exercises. Starting a
 routine atomically copies its exercises, rounds and targets into an independent
@@ -101,10 +104,10 @@ These checks do not execute business actions. The scenarios in
 [src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
 disposable Core adapter; they do not contain a second recipe interpreter.
 
-The public author SDK 2.8.0 is a licensed source distribution in
+The public author SDK 2.9.0 is a licensed source distribution in
 [tools/sdk](tools/sdk), refreshed from a clean committed product export and
 verified against its 49-file hash snapshot. Native manifests remain capped
-at 2 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
+at 4 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
 installed through a local file dependency. It needs
 only pinned public npm packages, with no private workspace or registry access.
 `npx anvil-app build . <empty-output-directory>` builds locally; choose an
