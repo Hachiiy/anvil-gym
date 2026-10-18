@@ -14,6 +14,7 @@
     "dev": "anvil-app dev .",
     "connect": "anvil-app connect .",
     "build": "anvil-app build .",
-    "check": "anvil-app check . && node src/check-source.mjs"
+    "check": "anvil-app check . && node src/check-source.mjs",
+    "release": "anvil-app release ."
   }
 }

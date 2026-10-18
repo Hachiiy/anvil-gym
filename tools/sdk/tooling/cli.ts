@@ -18,7 +18,10 @@ import { runAppConformance } from "../src/conformance.js";
 import { runDevelopmentCommand } from "./development-command.js";
 import { runDevelopmentWatchCommand } from "./development-watch-command.js";
 
+import { runReleaseCommand } from "./release-command.js";
+
 export async function runCli(args: string[], compile: typeof build) {
+  if (args[0] === "release") return runReleaseCommand(args.slice(1), compile);
   if (args[0] === "connect") return runDevelopmentCommand(args.slice(1));
   if (args[0] === "dev")
     return runDevelopmentWatchCommand(args.slice(1), compile);

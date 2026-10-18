@@ -49,7 +49,7 @@ export const appPlatformLimits = Object.freeze({
   catalogRepositories: 1000,
   catalogRequests: 120,
   catalogAssetBytes: 2 * 1024 * 1024,
-  reviewInputBytes: 256 * 1024,
+  reviewInputBytes: 1024 * 1024,
   reviewOutputTokens: 4096,
   reviewOutputBytes: 64 * 1024,
   reviewDeadlineMs: 120000,

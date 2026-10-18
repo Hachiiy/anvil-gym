@@ -66,21 +66,26 @@ These checks do not execute business actions. The scenarios in
 [src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
 disposable Core adapter; they do not contain a second recipe interpreter.
 
-The public author SDK 2.4.0 is a licensed source distribution in
+The public author SDK 2.5.0 is a licensed source distribution in
 [tools/sdk](tools/sdk), refreshed from a clean committed product export and
-verified against its 46-file hash snapshot. It raises only native manifest limits
-to 2 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
+verified against its 49-file hash snapshot. Native manifests remain capped
+at 2 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
 installed through a local file dependency. It needs
 only pinned public npm packages, with no private workspace or registry access.
 `npx anvil-app build . <empty-output-directory>` builds locally; choose an
 empty directory outside this repository. Installed packages contain declarative
 data and approved passive assets, never publisher JavaScript or Angular code.
-`npm run dev -- <anvil-origin>` connects the public SDK 2.4 preview through
+`npm run dev -- <anvil-origin>` connects the public SDK 2.5 preview through
 explicit owner consent, then watches, builds and uploads local changes. Preview
 credentials stay outside source. `npm run connect -- https://anvil.example`
 connects without starting the watcher. No additional local server is needed.
-The `npm run release` publication workflow remains pending; this repository has
-no installable release or discovery topic yet.
+The SDK 2.5 `npm run release` command builds locally and publishes an exact
+immutable release through local GitHub CLI authentication. It requires clean,
+committed and pushed source and enabled immutable releases. Saved publication
+identity stays outside the repository. Static conformance is distinct from Core
+and model proof. Publication does not install Gym, assign agents or start a
+review. Official publication and discovery remain pending while the App is under
+development; its first official installation is performed by the owner.
 
 Catalog and routine tables change the preview table definition fingerprint. An
 existing paired development preview requires an explicit reset or a new preview
