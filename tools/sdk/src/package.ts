@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import {
+  isAppCatalogImageRole,
   appReleaseDescriptorSchema,
   appReleaseIdentitySchema,
   appOriginCoordinates,
@@ -97,7 +98,7 @@ export function validateAppFiles(
     if (extensionTypes[extension] !== asset.mediaType)
       throw new Error("Unsupported asset extension/media type.");
     if (
-      ["icon", "cover"].includes(asset.role) &&
+      isAppCatalogImageRole(asset.role) &&
       !["image/png", "image/jpeg", "image/webp"].includes(asset.mediaType)
     )
       throw new Error("Catalog images require passive raster assets.");
@@ -137,7 +138,7 @@ export function describeAppRelease(
     },
     manifestSha256: built.manifestSha256,
     assets: built.manifest.assets
-      .filter((asset) => asset.role === "icon" || asset.role === "cover")
+      .filter((asset) => isAppCatalogImageRole(asset.role))
       .map((asset) => {
         const bytes = readAppArchive(built.archive).get(asset.path)!;
         return {
@@ -193,8 +194,8 @@ export function verifyAppPackage(
   if (manifest.package.version !== descriptor.version)
     throw new Error("Manifest/release version mismatch.");
   validateAppFiles(manifest, files);
-  const catalog = manifest.assets.filter(
-    (asset) => asset.role === "icon" || asset.role === "cover",
+  const catalog = manifest.assets.filter((asset) =>
+    isAppCatalogImageRole(asset.role),
   );
   if (descriptor.assets.length !== catalog.length)
     throw new Error("Catalog asset mapping mismatch.");

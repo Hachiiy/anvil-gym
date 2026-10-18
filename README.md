@@ -1,12 +1,12 @@
 # Gym for Anvil
 
-Gym 0.1.0 is an installable MVP for strength, basic cardio and custom exercise
+Gym 0.1.1 is an installable MVP for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 
 ## Install
 
-Open **Anvil → Apps → Market**, find **Gym**, choose an available reviewing agent
+Open **Anvil → Market**, find **Gym**, choose an available reviewing agent
 and select **Install**. Accept the permissions after the exact package
 review completes. If Gym is missing, refresh the Market catalog.
 
@@ -39,8 +39,8 @@ integrations are deferred. Offline editing is not supported.
 ## Development
 
 Use Node.js 22 or later, then `npm ci` and `npm run check`. The standalone SDK
-2.10.0 is included through the local dependency [tools/sdk](tools/sdk); no private
-workspace or npm registry is needed. Its clean 50-file hash snapshot is checked
+2.11.0 is included through the local dependency [tools/sdk](tools/sdk); no private
+workspace or npm registry is needed. Its 50-file hash snapshot is checked
 by the author validation. See [tool provenance](tools/README.md).
 
 - `npm run dev -- https://anvil.example` pairs an isolated preview and watches
@@ -66,3 +66,7 @@ Gym code is [Apache-2.0](LICENSE). The 19 pinned starter entries come from
 with its [Unlicense](data/free-exercise-db-LICENSE.txt) and
 [source metadata](data/starter-catalog.provenance.json). Catalog source values
 and adaptation provenance are retained; unmapped shoulder subtypes are not guessed.
+
+Store artwork is original vector source rendered to PNG. Screenshots capture the
+real native Gym interface using fictional preview data. Store assets are passive,
+digest-bound release files; browsing them does not install Gym.

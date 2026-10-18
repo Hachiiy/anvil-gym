@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { appPlatformLimits as limits } from "../limits.js";
 import {
+  appCatalogImageRoles,
   appCompatibilitySchema,
   appKeySchema,
   appFieldKeySchema,
@@ -78,7 +79,12 @@ export const appManifestSchema = z.strictObject({
           "image/webp",
           "text/plain",
         ]),
-        role: z.enum(["icon", "cover", "documentation", "fixture", "data"]),
+        role: z.enum([
+          ...appCatalogImageRoles,
+          "documentation",
+          "fixture",
+          "data",
+        ]),
       }),
     )
     .max(limits.archiveFiles - 1),

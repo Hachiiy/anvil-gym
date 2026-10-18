@@ -74,6 +74,23 @@ export const appCompatibilitySchema = z.strictObject({
   nativeUi: z.literal(1),
   designComponents: z.literal(1),
 });
+export const appCatalogImageRoles = [
+  "icon",
+  "cover",
+  "screenshot-1",
+  "screenshot-2",
+  "screenshot-3",
+  "screenshot-4",
+  "screenshot-5",
+  "screenshot-6",
+] as const;
+export const appCatalogImageRoleSchema = z.enum(appCatalogImageRoles);
+export function isAppCatalogImageRole(
+  value: string,
+): value is (typeof appCatalogImageRoles)[number] {
+  return appCatalogImageRoles.some((role) => role === value);
+}
+
 const descriptorFields = {
   schemaVersion: z.literal("1.0"),
   artifact: z.strictObject({
@@ -94,7 +111,7 @@ const descriptorFields = {
         mediaType: z.enum(["image/png", "image/jpeg", "image/webp"]),
       }),
     )
-    .max(2),
+    .max(appCatalogImageRoles.length),
 };
 export const appReleaseDescriptorSchema = z.union([
   githubRelease.extend(descriptorFields),

@@ -33,10 +33,10 @@ export function createGymManifest() {
       key: "gym",
       name: "Gym",
       kind: "app",
-      version: "0.1.0",
-      summary: "Strength, cardio and custom exercise measurements",
+      version: "0.1.1",
+      summary: "Your workouts and routines, kept simple",
       description:
-        "Track strength, cardio and custom exercise measurements with reusable routines and shared Anvil actions.",
+        "Build your routine, record your sets and pick up where you left off. Gym brings strength training, basic cardio and your own custom exercises into Anvil.\n\nCreate reusable routines with supersets and circuits, keep planned and performed values separate, and revisit your workout history. Measurements retain their units and meaning.\n\nUse Gym yourself or give an agent access to help you manage it. Requires an online Anvil connection.",
       categories: ["fitness"],
       license: "Apache-2.0",
     },
@@ -49,6 +49,23 @@ export function createGymManifest() {
       designComponents: 1,
     },
     assets: [
+      { path: "assets/store/icon.png", mediaType: "image/png", role: "icon" },
+      { path: "assets/store/cover.png", mediaType: "image/png", role: "cover" },
+      {
+        path: "assets/store/workout.png",
+        mediaType: "image/png",
+        role: "screenshot-1",
+      },
+      {
+        path: "assets/store/exercises.png",
+        mediaType: "image/png",
+        role: "screenshot-2",
+      },
+      {
+        path: "assets/store/routine.png",
+        mediaType: "image/png",
+        role: "screenshot-3",
+      },
       {
         path: "data/starter-catalog.json",
         mediaType: "application/json",
