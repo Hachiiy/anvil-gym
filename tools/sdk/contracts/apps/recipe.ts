@@ -46,6 +46,13 @@ export const appExpressionSchema = z.discriminatedUnion("op", [
     },
   }),
   z.strictObject({
+    op: z.literal("unique"),
+    get source() {
+      return appExpressionSchema;
+    },
+    maxItems: z.number().int().positive().max(limits.schemaArrayItems),
+  }),
+  z.strictObject({
     op: z.literal("at"),
     get source() {
       return appExpressionSchema;

@@ -1,3 +1,4 @@
+import { workoutGroup } from "./views/workout-group.js";
 import { defineApp } from "@anvil/app-sdk/author";
 import { createGymManifest } from "./manifest.mjs";
 import { exerciseLibrary } from "./views/exercise-library.js";
@@ -31,6 +32,7 @@ export default defineApp({
     workoutTargets,
     workoutSetOrder,
     workoutStructure,
+    workoutGroup,
     routineLibrary,
     newRoutine,
     routineEditor,

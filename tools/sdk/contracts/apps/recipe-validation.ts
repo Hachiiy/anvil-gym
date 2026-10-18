@@ -110,6 +110,16 @@ export function validateAppRecipe(
           maximum: value?.type === "array" ? value.maxItems : value?.maxLength,
         };
       }
+      case "unique": {
+        const source = child(node.source);
+        expect(source, ["array"]);
+        return {
+          type: "array",
+          items: source?.items,
+          minItems: 0,
+          maxItems: Math.min(source?.maxItems ?? node.maxItems, node.maxItems),
+        };
+      }
       case "at": {
         const source = child(node.source);
         expect(source, ["array"]);

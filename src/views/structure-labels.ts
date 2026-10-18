@@ -26,18 +26,13 @@ export const kindLabel = (kind: Binding): Binding => ({
   },
 });
 export const groupLabel = (kind: Binding, position: Binding): Binding => ({
-  op: "if",
-  condition: { op: "equal", left: kind, right: literal("single") },
-  then: kindLabel(kind),
-  else: {
-    op: "concat",
-    left: { op: "concat", left: kindLabel(kind), right: literal(" ") },
-    right: {
-      op: "format",
-      format: "number",
-      digits: 0,
-      value: { op: "add", left: position, right: literal(1) },
-    },
+  op: "concat",
+  left: { op: "concat", left: kindLabel(kind), right: literal(" ") },
+  right: {
+    op: "format",
+    format: "number",
+    digits: 0,
+    value: { op: "add", left: position, right: literal(1) },
   },
 });
 export const join = (

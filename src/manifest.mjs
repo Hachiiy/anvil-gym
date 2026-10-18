@@ -1,3 +1,5 @@
+import { groupEditorAction } from "./workouts/group-editor.mjs";
+import { arrangementActions } from "./workouts/arrangement.mjs";
 import { structureActions } from "./workouts/structure.mjs";
 import { tables } from "./domain-schema.mjs";
 import { metricActions } from "./metric-actions.mjs";
@@ -83,6 +85,8 @@ export function createGymManifest() {
       ...orderActions,
       ...removalActions,
       ...structureActions,
+      ...arrangementActions,
+      groupEditorAction,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",
@@ -134,6 +138,7 @@ export function createGymManifest() {
       "set",
       "catalog-selection",
       "removal",
+      "arrangement",
     ].flatMap((table) => [`data.${table}.read`, `data.${table}.write`]),
     dependencies: [],
     dataSources: [],

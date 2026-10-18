@@ -67,6 +67,11 @@ export const workoutExerciseActions = [
           binary("less", length(result("previous", "records")), literal(50)),
           "This workout already has 50 exercise occurrences.",
         ),
+        assertion(
+          "block-budget",
+          binary("less", length(result("blocks", "records")), literal(50)),
+          "Remove an empty group before adding another exercise.",
+        ),
         create(
           "block",
           "block",
@@ -84,7 +89,21 @@ export const workoutExerciseActions = [
           fields({
             sessionId: result("session", "id"),
             blockId: result("block", "id"),
-            position: appendPosition("previous"),
+            position: {
+              op: "check-number",
+              minimum: 0,
+              maximum: 1000000,
+              integer: true,
+              value: binary(
+                "add",
+                binary(
+                  "multiply",
+                  result("block", "data", "position"),
+                  literal(50),
+                ),
+                length(result("previous", "records")),
+              ),
+            },
             snapshot: fields({
               exerciseId: result("exercise", "id"),
               exerciseRevision: result("exercise", "revision"),

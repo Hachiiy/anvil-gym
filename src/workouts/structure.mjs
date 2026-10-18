@@ -1,3 +1,12 @@
+import {
+  occurrenceSummary,
+  occurrenceSummaries,
+} from "./occurrence-summary.mjs";
+import {
+  orderedEntries,
+  orderEntry,
+  orderReferences,
+} from "./order-expressions.mjs";
 import { integer, list, object } from "../schema.mjs";
 import { fields, input, literal, readAction, result } from "../expressions.mjs";
 import { entityInput, get, query, readCaps, rowSchema } from "./shared.mjs";
@@ -18,17 +27,20 @@ export const structureActions = [
           result("session", "id"),
           50,
         ),
+        orderReferences("references", "blocks"),
       ],
       object({
         session: rowSchema("session"),
         blocks: list(rowSchema("block"), 50),
-        occurrences: list(rowSchema("occurrence"), 50),
+        order: list(orderEntry, 50),
+        occurrences: list(occurrenceSummary, 50),
         ordinals: list(integer(1, 50), 50, 50),
       }),
       fields({
         session: result("session"),
         blocks: result("blocks", "records"),
-        occurrences: result("occurrences", "records"),
+        order: orderedEntries("references"),
+        occurrences: occurrenceSummaries("occurrences"),
         ordinals: literal(Array.from({ length: 50 }, (_, i) => i + 1)),
       }),
     ),

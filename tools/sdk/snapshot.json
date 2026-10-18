@@ -1,12 +1,12 @@
 {
-  "profile": "anvil-app-tools/2.7.0",
-  "sourceCommit": "6fc9903ffb494f3603321f4d892b1474a9db478b",
+  "profile": "anvil-app-tools/2.8.0",
+  "sourceCommit": "0e65d1ee4fed635aa851e061e5466fe616107ee1",
   "sourceState": "committed",
   "files": {
     "contracts/apps/identity.ts": "50d044959d7dc9ad1e8e8a8f686cc6d987d5e7857dbec089f283abcb80857896",
     "contracts/apps/units.ts": "ce63cb93c8b4ec048b0da41cafd674b5153eb7c0284ffd30ff2657035dfed805",
     "contracts/apps/json-schema.ts": "34abbfae655ec9141c240ec6950f9cfa10f13ee71f56edfedba2d8492ed58c2e",
-    "contracts/apps/recipe.ts": "dc6878009254cf52adf9bc7db52bd912a7a0edd9372d75030c83efdeaa2a60eb",
+    "contracts/apps/recipe.ts": "bc9bc7a3ea8ee9ccd038a7df3ae48b167f3f79014186ccb296f97ab395e61aba",
     "contracts/apps/manifest.ts": "31647e2cba76823b9158c93179e310d1c4dda0e9875ac74564aba142e4e15566",
     "contracts/apps/protocol.ts": "33bd32c469d395d72632fa1327c934bed806df40c4ea5dd9700f8353571963a6",
     "contracts/apps/errors.ts": "4d3797d6b088c9eb047846d9ef5579eb25355525e24731256f6e83636ccd974b",
@@ -14,7 +14,7 @@
     "contracts/apps/mcp.ts": "c7bf3d92332d8bb6f2936723adf7e6527472a45b3977a6b7bc8ef1216302b9fb",
     "contracts/apps/json.ts": "1f17ef7d88f50f6902b45c3117ef419cc6d28cd9670a61255398c2aa9ec4db6d",
     "contracts/apps/schema-inference.ts": "653230b989555faf40e6805dcf3a99017a041ab3a3e71453f16ddff09fe728d9",
-    "contracts/apps/recipe-validation.ts": "61e09eb31fe0d049abceb593f0907ce4fe950ddb263a0eac26b33927dbcf106f",
+    "contracts/apps/recipe-validation.ts": "d12b35c33c376dda72ac45806e39c4493f1c88130f111785046df98e2b44037f",
     "contracts/apps/development.ts": "054466eca804cdfae16022701690f4bccd2b5691c2d409c8840bbae53955e81b",
     "contracts/apps/native/check-context.ts": "6ed0b19f9ddd03268701ab853c1c96dce73991ce7dcaa08eb00a70862c75bd84",
     "contracts/apps/native/check-events.ts": "93a52ef8dc9a73975c56bd7f3e908f530279b4ba49331d394e56af50589b41e7",
@@ -51,6 +51,6 @@
     "tooling/release-state.ts": "2a3a53dbdd15a6f4c1b41c55a893452e80141b46b00f509e44ffee187b5ff734",
     "cli.mjs": "1bdcf02baf519c4143f46c0002fd64d20f1e21cd8eab8fb4bddc7feb2d1d3e95",
     "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
-    "package.json": "84928a46f30c5db424b770d0500dd780a4f5b42136c6c5ba7fbe2ce48111a83f"
+    "package.json": "270f2d0b1e9abab11a4f0e579616ae028708b6863306726bcee2a7cb34f4120a"
   }
 }

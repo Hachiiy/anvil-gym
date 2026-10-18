@@ -1,8 +1,8 @@
 # Gym for Anvil
 
 Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current source defines eight data tables, 91 declared Core
-actions and 17 native views, with versioned metrics and editable catalog
+measurements. Its current source defines nine data tables, 107 declared Core
+actions and 18 native views, with versioned metrics and editable catalog
 provenance. Exercise edits assign new metric versions when measurement meanings
 change.
 
@@ -56,8 +56,19 @@ last exercise also removes its empty group. Details also offers Remove workout;
 the library retains its Undo across reload. All removals and restorations are
 atomic, retain canonical IDs and data, and check observed revisions. A removal
 record consumes one of the existing 100 mutation rows, so a workout at that
-boundary needs a smaller removal first. Exercise/block reordering and movement,
-reports and legacy import remain planned. Workout and rest timers
+boundary needs a smaller removal first. Workout structure also supports group ordering; each exercise opens its Group
+screen for ordering, moving to a superset/circuit and autosaved group settings.
+Order changes affect the actual workout, retain performed sets and measurements,
+and have durable revision-checked Undo. An unchanged settings form creates no
+new arrangement. Single-exercise groups have direct order controls too. Layout
+validation rejects duplicate IDs and stale observed revisions before applying
+changes. Only changed layout rows are written; the existing 100-row transaction
+bound includes the arrangement and session records. Rewrites affecting more
+than 98 layout rows must be split into smaller operations. Organization reads
+return compact identity, membership and pinned-name summaries; full snapshots
+remain available through the logging actions. Empty groups remain available for
+reuse or explicit removal.
+Reports and legacy import remain planned. Workout and rest timers
 are outside the product scope; duration is still a configurable measurement.
 Gym uses Anvil's standard App contracts and Core action gateway
 and requires an online Anvil connection. Installation does not automatically
@@ -90,7 +101,7 @@ These checks do not execute business actions. The scenarios in
 [src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
 disposable Core adapter; they do not contain a second recipe interpreter.
 
-The public author SDK 2.7.0 is a licensed source distribution in
+The public author SDK 2.8.0 is a licensed source distribution in
 [tools/sdk](tools/sdk), refreshed from a clean committed product export and
 verified against its 49-file hash snapshot. Native manifests remain capped
 at 2 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
@@ -111,7 +122,7 @@ and model proof. Publication does not install Gym, assign agents or start a
 review. Official publication and discovery remain pending while the App is under
 development; its first official installation is performed by the owner.
 
-Catalog, routine and removal tables change the preview table definition fingerprint. An
+Catalog, routine, removal and arrangement tables change the preview table definition fingerprint. An
 existing paired development preview requires an explicit reset or a new preview
 before the current schema is available; resetting clears that preview’s records.
 Installed production datasets are separate. The first official installation

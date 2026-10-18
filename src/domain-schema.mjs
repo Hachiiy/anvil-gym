@@ -71,6 +71,19 @@ export const removalRecords = object({
   sessions: list(recordReference, 1),
 });
 
+export const arrangementBlock = object({
+  ...recordReference.properties,
+  position: integer(0, 1000000),
+  kind: choice("single", "superset", "circuit"),
+  rounds: integer(1, 100),
+  notes: text(1000),
+});
+export const arrangementOccurrence = object({
+  ...recordReference.properties,
+  position: integer(0, 1000000),
+  blockId: reference,
+});
+
 export const recordSchemas = {
   exercise: object({
     name: text(120, 1),
@@ -149,6 +162,20 @@ export const recordSchemas = {
       "notes",
     ],
   ),
+  arrangement: object({
+    sessionId: reference,
+    sessionRevision: { type: "integer" },
+    blocks: list(arrangementBlock, 50),
+    occurrences: list(arrangementOccurrence, 50),
+    status: choice(
+      "preparing",
+      "available",
+      "restoring",
+      "applied",
+      "dismissed",
+    ),
+    createdAt: text(64),
+  }),
   removal: object({
     label: text(120),
     ordinal: integer(0, 1000001),
@@ -191,6 +218,7 @@ const indexes = {
   set: ["sessionId", "occurrenceId"],
   // Removal metadata names retained tombstones, not live foreign keys.
   removal: ["contextId", "status", "createdAt"],
+  arrangement: ["sessionId", "status", "createdAt"],
 };
 export const tables = Object.entries(recordSchemas).map(([name, schema]) => ({
   name,

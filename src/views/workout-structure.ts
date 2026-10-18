@@ -1,3 +1,8 @@
+import {
+  arrangementRecoveryActions,
+  arrangementUndo,
+  orderControls,
+} from "./workout-order-controls.js";
 import type { NativeNode } from "@anvil/app-sdk/author";
 import {
   button,
@@ -87,9 +92,16 @@ export const workoutStructure = workoutView({
     "remove-workout-block",
     "latest-workout-removal",
     ...recoveryActions,
+    ...arrangementRecoveryActions,
+    "swap-workout-groups",
   ],
   sources: [
     source("structure", "get-workout-structure", paramsId()),
+    source(
+      "arrangements",
+      "latest-workout-arrangement",
+      object({ sessionId: ref("params", ["id"]) }),
+    ),
     source(
       "removals",
       "latest-workout-removal",
@@ -127,24 +139,15 @@ export const workoutStructure = workoutView({
         ref("source", ["session", "data", "title"], "structure"),
       ),
       recoveryControls("structure-undo", refresh),
+      arrangementUndo([
+        ...refresh,
+        { op: "refresh-source", source: "arrangements" },
+      ]),
       {
         id: "groups",
         component: "list",
         props: {
-          items: {
-            op: "filter",
-            source: ref("source", ["blocks"], "structure"),
-            as: "candidate",
-            maxItems: 50,
-            value: {
-              op: "not",
-              value: {
-                op: "equal",
-                left: ref("item", ["data", "kind"], "candidate"),
-                right: literal("single"),
-              },
-            },
-          },
+          items: ref("source", ["blocks"], "structure"),
           as: "block",
           key: ["id"],
           maxItems: 50,
@@ -168,6 +171,59 @@ export const workoutStructure = workoutView({
                 level: 2,
               },
             },
+            {
+              id: "group-members",
+              component: "list",
+              props: {
+                items: {
+                  op: "if",
+                  condition: {
+                    op: "equal",
+                    left: ref("item", ["data", "kind"], "block"),
+                    right: literal("single"),
+                  },
+                  then: {
+                    op: "filter",
+                    source: ref("source", ["occurrences"], "structure"),
+                    as: "candidate-member",
+                    maxItems: 50,
+                    value: {
+                      op: "equal",
+                      left: ref(
+                        "item",
+                        ["data", "blockId"],
+                        "candidate-member",
+                      ),
+                      right: ref("item", ["id"], "block"),
+                    },
+                  },
+                  else: literal([]),
+                },
+                as: "group-member",
+                key: ["id"],
+                maxItems: 1,
+              },
+              template: text(
+                "group-member-name",
+                ref("item", ["data", "snapshot", "name"], "group-member"),
+              ),
+            },
+            orderControls(
+              "group-order",
+              "structure",
+              ref("item", ["id"], "block"),
+            ),
+            button(
+              "open-group",
+              "Open group",
+              navigate(
+                "workout-group",
+                object({
+                  id: ref("item", ["id"], "block"),
+                  sessionId: ref("params", ["id"]),
+                }),
+              ),
+            ),
             remove("block"),
           ],
         },
@@ -215,6 +271,18 @@ export const workoutStructure = workoutView({
                 ),
               ),
             },
+            button(
+              "open-exercise-group",
+              "Group",
+              navigate(
+                "workout-group",
+                object({
+                  id: ref("item", ["data", "blockId"], "occurrence"),
+                  sessionId: ref("params", ["id"]),
+                }),
+              ),
+              "ghost",
+            ),
             remove("occurrence"),
           ],
         },
