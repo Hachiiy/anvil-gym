@@ -75,7 +75,7 @@ These checks do not execute business actions. The scenarios in
 [src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
 disposable Core adapter; they do not contain a second recipe interpreter.
 
-The public author SDK 2.5.0 is a licensed source distribution in
+The public author SDK 2.6.0 is a licensed source distribution in
 [tools/sdk](tools/sdk), refreshed from a clean committed product export and
 verified against its 49-file hash snapshot. Native manifests remain capped
 at 2 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is

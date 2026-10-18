@@ -1,6 +1,6 @@
 {
-  "profile": "anvil-app-tools/2.5.0",
-  "sourceCommit": "f3f03ac03f9de21c1ef976291adcdff0c041bd72",
+  "profile": "anvil-app-tools/2.6.0",
+  "sourceCommit": "cc44c5ecce980e246dea8b3a6f6ea15fe09587e5",
   "sourceState": "committed",
   "files": {
     "contracts/apps/identity.ts": "50d044959d7dc9ad1e8e8a8f686cc6d987d5e7857dbec089f283abcb80857896",
@@ -26,7 +26,7 @@
     "contracts/apps/native/nodes.ts": "9dee683aced19654298d574588b7b21cbc3594f06365666b9630aa58bf6d0ed1",
     "contracts/apps/native/validation.ts": "7657adc470bbb88db03bc9005e60c11b4f7ca3e46a39c3b484c980456a15a977",
     "contracts/apps/native/view.ts": "af1854d120c5db8296584b86a114b1d39695095996e17cfb90070e265e471f5f",
-    "contracts/limits.ts": "33ac46ebc1d83438cf700f6a5e358c99a55d691d1f46c68197e3b303679ae2c3",
+    "contracts/limits.ts": "12412a8442b52274e1c6a01470c749f611716221cb5a3a8ac9449c095a1d763f",
     "contracts/development-http.ts": "07d9940ec2413163a6681cbfacd607a81bd22449d7cd85cd2216331db8ff3cd6",
     "contracts/apps/index.ts": "7421fd7d97d4ecc54fa717adc30c1d5071354bc39c97fcf60933be1bfb6f9d8d",
     "src/archive.ts": "f0dcb1a8acb5b7913696326fbcbe64df54c22d6ee7f888d7ffd6d87283bce444",
@@ -51,6 +51,6 @@
     "tooling/release-state.ts": "2a3a53dbdd15a6f4c1b41c55a893452e80141b46b00f509e44ffee187b5ff734",
     "cli.mjs": "1bdcf02baf519c4143f46c0002fd64d20f1e21cd8eab8fb4bddc7feb2d1d3e95",
     "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
-    "package.json": "902cc75f7209c58f95588fd2838471c71c654022a2887dadc2cbb42c005642ae"
+    "package.json": "20be0efac3179724efd3d9ba5db349aa4e6f7b707525f4fba3cfa0ede6b9cf73"
   }
 }

@@ -15,7 +15,7 @@ export const appPlatformLimits = Object.freeze({
   schemaProperties: 64,
   schemaArrayItems: 2000,
   tables: 32,
-  actions: 64,
+  actions: 128,
   integrations: 16,
   schedules: 16,
   widgets: 32,
