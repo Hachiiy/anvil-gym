@@ -21,3 +21,4 @@ export * from "./native/inference.js";
 export * from "./native/nodes.js";
 export * from "./native/validation.js";
 export * from "./native/view.js";
+export * from "./native/visuals.js";

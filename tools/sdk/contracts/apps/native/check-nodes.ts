@@ -4,6 +4,12 @@ import type { NativeNode, NativeComponent } from "./nodes.js";
 import { nativeComponentMajors } from "./nodes.js";
 import { NativeCheckContext } from "./check-context.js";
 import { checkNativeEvents } from "./check-events.js";
+import {
+  nativeChartLabelsType,
+  nativeChartValuesType,
+  nativeRegionsType,
+  nativeRegionSelectionType,
+} from "./visuals.js";
 
 export function checkNativeTree(check: NativeCheckContext) {
   const identities = new Set<string>();
@@ -43,6 +49,43 @@ export function checkNativeTree(check: NativeCheckContext) {
       );
     }
     switch (node.component) {
+      case "chart":
+        check.assign(
+          expr(node.props.labels),
+          nativeChartLabelsType,
+          `${at}.labels`,
+        );
+        check.assign(
+          expr(node.props.values),
+          nativeChartValuesType,
+          `${at}.values`,
+        );
+        for (const value of [node.props.label, node.props.unit])
+          if (typeof value === "object")
+            check.expect(expr(value), ["string"], at);
+        break;
+      case "region-map":
+        check.assign(
+          expr(node.props.regions),
+          nativeRegionsType,
+          `${at}.regions`,
+        );
+        for (const value of [node.props.label, node.props.selected])
+          if (typeof value === "object")
+            check.expect(expr(value), ["string"], at);
+        if (typeof node.props.disabled === "object")
+          check.expect(
+            expr(node.props.disabled),
+            ["boolean"],
+            `${at}.disabled`,
+          );
+        checkNativeEvents(
+          node.onSelect,
+          { ...scope, event: nativeRegionSelectionType },
+          check,
+          `${at}.onSelect`,
+        );
+        break;
       case "list": {
         const list = expr(node.props.items);
         check.expect(list, ["array"], at);

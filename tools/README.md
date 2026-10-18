@@ -1,6 +1,6 @@
 # Standalone public App SDK
 
-`sdk/` contains the Apache-2.0 Anvil App author profile 2.9.0 source distribution.
+`sdk/` contains the Apache-2.0 Anvil App author profile 2.10.0 source distribution.
 It includes typed native definition builders, package/archive validation,
 static conformance, the author-only TypeScript compiler/CLI and their bounded
 App contract dependencies. It contains no server, deployment configuration,
@@ -10,8 +10,8 @@ local watch/build/upload workflow and `npm run release` for exact immutable
 publication through local GitHub CLI authentication. Release identity stays
 outside the repository; publication never installs Gym or starts model work. These author tools never enter installed Apps.
 
-`sdk/snapshot.json` records the source revision and state and SHA-256 of all 49
-exported tool files. SDK 2.9.0 is exported from clean committed product source; the snapshot records that exact revision. Native manifests remain capped at 4 MiB and 128,000 JSON
+`sdk/snapshot.json` records the source revision and state and SHA-256 of all 50
+exported tool files. SDK 2.10.0 is exported from clean committed product source; the snapshot records that exact revision. Native manifests remain capped at 4 MiB and 128,000 JSON
 nodes; retained Core data JSON defaults remain 512 KiB and 32,000 nodes, and other
 Core action input/result/record/intermediate limits are unchanged. The SDK permits
 up to 128 declared actions per manifest and native view; this does not expand
@@ -31,3 +31,8 @@ See [sdk/LICENSE](sdk/LICENSE).
 
 SDK 2.8 adds bounded canonical JSON `unique`, retaining first-occurrence order
 under the existing per-call budget. No runtime limit or permission is expanded.
+
+SDK 2.10 adds shared native charts and selectable SVG region maps. Dedicated
+display bounds allow 40 chart points and 50 regions with bounded geometry;
+existing Core execution and data limits remain unchanged. These primitives do
+not yet implement Gym reports or chat widgets.

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { appPlatformLimits } from "../../limits.js";
+import { appPlatformLimits, nativeVisualLimits } from "../../limits.js";
 import { appFieldKeySchema, appKeySchema, appPathSchema } from "../identity.js";
 import {
   nativeBooleanSchema,
@@ -209,6 +209,30 @@ function makeNativeNodeSchema<S extends z.ZodType>(child: S) {
     }),
     z.strictObject({
       ...base,
+      component: z.literal("chart"),
+      props: z.strictObject({
+        label: nativeLabelSchema,
+        kind: z.enum(["line", "bar"]),
+        labels: nativeExpressionSchema,
+        values: nativeExpressionSchema,
+        unit: nativeTextSchema.optional(),
+      }),
+    }),
+    z.strictObject({
+      ...base,
+      component: z.literal("region-map"),
+      props: z.strictObject({
+        label: nativeLabelSchema,
+        width: z.number().positive().max(nativeVisualLimits.extent),
+        height: z.number().positive().max(nativeVisualLimits.extent),
+        regions: nativeExpressionSchema,
+        selected: nativeTextSchema.optional(),
+        disabled: nativeBooleanSchema.optional(),
+      }),
+      onSelect: nativeEventSequenceSchema,
+    }),
+    z.strictObject({
+      ...base,
       component: z.literal("divider"),
       props: z.strictObject({}),
     }),
@@ -258,5 +282,7 @@ export const nativeComponentMajors: Readonly<Record<NativeComponent, number>> =
     "empty-state": 1,
     image: 1,
     statistic: 1,
+    chart: 1,
+    "region-map": 1,
     divider: 1,
   });

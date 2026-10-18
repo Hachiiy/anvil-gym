@@ -84,3 +84,10 @@ export const appPreviewLimits = /* @__PURE__ */ Object.freeze({
   datasetRecords: 10000,
   datasetBytes: 16 * 1024 * 1024,
 });
+export const nativeVisualLimits = /* @__PURE__ */ Object.freeze({
+  chartPoints: 40,
+  regions: 50,
+  pathCharacters: 4096,
+  extent: 2048,
+  magnitude: 1e12,
+});

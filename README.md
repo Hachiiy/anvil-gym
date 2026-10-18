@@ -104,9 +104,9 @@ These checks do not execute business actions. The scenarios in
 [src/exercise-scenarios.mjs](src/exercise-scenarios.mjs) require an actual
 disposable Core adapter; they do not contain a second recipe interpreter.
 
-The public author SDK 2.9.0 is a licensed source distribution in
+The public author SDK 2.10.0 is a licensed source distribution in
 [tools/sdk](tools/sdk), refreshed from a clean committed product export and
-verified against its 49-file hash snapshot. Native manifests remain capped
+verified against its 50-file hash snapshot. Native manifests remain capped
 at 4 MiB and 128,000 JSON nodes; Core data limits remain unchanged. The SDK is
 installed through a local file dependency. It needs
 only pinned public npm packages, with no private workspace or registry access.
