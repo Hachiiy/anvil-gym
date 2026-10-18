@@ -11,6 +11,7 @@ import {
 } from "../expressions.mjs";
 import {
   activeSession,
+  availablePosition,
   create,
   get,
   query,
@@ -51,12 +52,25 @@ export const historyCopyActions = [
         get("source", "block", input("sourceId")),
         get("session", "session", input("sessionId")),
         ...historySession(result("source", "data", "sessionId")),
+        {
+          ...query(
+            "previous",
+            "block",
+            "sessionId",
+            result("session", "id"),
+            50,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         create(
           "saved",
           "block",
           fields({
             sessionId: input("sessionId"),
-            position: result("source", "data", "position"),
+            position: availablePosition(
+              "previous",
+              result("source", "data", "position"),
+            ),
             kind: result("source", "data", "kind"),
             rounds: result("source", "data", "rounds"),
             notes: result("source", "data", "notes"),
@@ -91,13 +105,26 @@ export const historyCopyActions = [
         get("block", "block", input("blockId")),
         get("session", "session", result("block", "data", "sessionId")),
         ...historySession(result("source", "data", "sessionId")),
+        {
+          ...query(
+            "previous",
+            "occurrence",
+            "sessionId",
+            result("session", "id"),
+            50,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         create(
           "saved",
           "occurrence",
           fields({
             sessionId: result("session", "id"),
             blockId: input("blockId"),
-            position: result("source", "data", "position"),
+            position: availablePosition(
+              "previous",
+              result("source", "data", "position"),
+            ),
             snapshot: result("source", "data", "snapshot"),
             restSeconds: result("source", "data", "restSeconds"),
             notes: result("source", "data", "notes"),
@@ -153,7 +180,16 @@ export const historyCopyActions = [
           ),
           "Historical values require their pinned exercise and measurement meanings.",
         ),
-        query("previous", "set", "occurrenceId", input("occurrenceId"), 10),
+        {
+          ...query(
+            "previous",
+            "set",
+            "occurrenceId",
+            result("occurrence", "id"),
+            10,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         assertion(
           "set-bound",
           {
@@ -169,7 +205,11 @@ export const historyCopyActions = [
           fields({
             occurrenceId: input("occurrenceId"),
             sessionId: result("session", "id"),
-            position: result("source", "data", "position"),
+            position: availablePosition(
+              "previous",
+              result("source", "data", "position"),
+              10,
+            ),
             round: result("source", "data", "round"),
             kind: result("source", "data", "kind"),
             planned: {

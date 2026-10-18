@@ -1,5 +1,4 @@
-import { recordReference } from "../domain-schema.mjs";
-import { list, object, reference } from "../schema.mjs";
+import { object, reference } from "../schema.mjs";
 import {
   assertion,
   batch,
@@ -10,6 +9,7 @@ import {
   input,
   item,
   literal,
+  length,
   mapped,
   not,
   oneOf,
@@ -38,24 +38,16 @@ const requireRevision = () =>
     equal(result("removal", "revision"), input("revision")),
     "This removal changed. Reload before continuing.",
   );
-const restoreContext = () => [
-  get("removal", "removal", input("removalId")),
-  assertion(
-    "restoring",
-    equal(result("removal", "data", "status"), literal("restoring")),
-    "Use Undo removal to restore these records.",
-  ),
-];
-const currentSets = () =>
-  query(
-    "current",
-    "set",
-    "occurrenceId",
-    result("removal", "data", "contextId"),
-    10,
-  );
+import { removalRestoreActions } from "./removal-restore.mjs";
+import { removalValidationActions } from "./removal-validation.mjs";
+import { removalDeleteActions } from "./removal-delete.mjs";
+import { treeRemovalActions } from "./removal-tree.mjs";
 
 export const removalActions = [
+  ...removalRestoreActions,
+  ...removalValidationActions,
+  ...removalDeleteActions,
+  ...treeRemovalActions,
   {
     name: "remove-workout-set",
     summary:
@@ -77,6 +69,28 @@ export const removalActions = [
           "removal",
           "removal",
           fields({
+            label: result("occurrence", "data", "snapshot", "name"),
+            ordinal: {
+              op: "check-number",
+              minimum: 1,
+              maximum: 10,
+              integer: true,
+              value: binary(
+                "add",
+                length(
+                  filtered(
+                    result("sets", "records"),
+                    binary(
+                      "less",
+                      item("data", "position"),
+                      result("set", "data", "position"),
+                    ),
+                    10,
+                  ),
+                ),
+                literal(1),
+              ),
+            },
             scope: literal("set"),
             contextId: result("occurrence", "id"),
             contextRevision: result("occurrence", "revision"),
@@ -111,6 +125,8 @@ export const removalActions = [
                 10,
               ),
             ),
+            remainingOccurrences: literal([]),
+            remainingBlocks: literal([]),
             status: literal("preparing"),
             createdAt: { op: "now" },
           }),
@@ -139,8 +155,8 @@ export const removalActions = [
       "Restore retained set data only while its parent and remaining sets match the removal",
     effect: "transaction",
     capabilities: [
-      ...readCaps("removal", "set", "occurrence"),
-      ...writeCaps("removal", "set"),
+      ...readCaps("removal", "session", "block", "set", "occurrence"),
+      ...writeCaps("removal", "session", "block", "occurrence", "set"),
     ],
     inputSchema: revisionInput,
     resultSchema: rowSchema("removal"),
@@ -157,28 +173,22 @@ export const removalActions = [
           ]),
           "This removal has already been restored.",
         ),
-        assertion(
-          "set-removal",
-          equal(result("removal", "data", "scope"), literal("set")),
-          "This removal type is not supported yet.",
-        ),
-        get("occurrence", "occurrence", result("removal", "data", "contextId")),
-        assertion(
-          "same-parent",
-          equal(
-            result("occurrence", "revision"),
-            result("removal", "data", "contextRevision"),
+        ...["set", "occurrence", "block"].map((scope) =>
+          batch(
+            `valid-${scope}`,
+            `validate-${scope}-removal`,
+            {
+              op: "if",
+              condition: equal(
+                result("removal", "data", "scope"),
+                literal(scope),
+              ),
+              then: literal([0]),
+              else: literal([]),
+            },
+            fields({ removalId: input("id") }),
+            1,
           ),
-          "The exercise changed. This removal can no longer be undone.",
-        ),
-        currentSets(),
-        assertion(
-          "same-sets",
-          equal(
-            references(result("current", "records")),
-            result("removal", "data", "remaining"),
-          ),
-          "The sets changed. This removal can no longer be undone.",
         ),
         update(
           "restoring",
@@ -186,6 +196,23 @@ export const removalActions = [
           input("id"),
           input("revision"),
           retainedData("removal", "removal", { status: literal("restoring") }),
+        ),
+        ...[
+          ["sessions", "session", 1],
+          ["blocks", "block", 50],
+          ["occurrences", "occurrence", 50],
+        ].map(([key, table, maximum]) =>
+          batch(
+            `restored-${key}`,
+            `restore-workout-${table}`,
+            result("removal", "data", "records", key),
+            fields({
+              removalId: input("id"),
+              id: item("id"),
+              revision: item("revision"),
+            }),
+            maximum,
+          ),
         ),
         batch(
           "groups",
@@ -203,77 +230,6 @@ export const removalActions = [
         ),
       ],
       result: result("applied"),
-    },
-  },
-  {
-    name: "restore-workout-set-group",
-    summary: "Restore a bounded set group inside an admitted Undo transaction",
-    effect: "transaction",
-    capabilities: [...readCaps("removal"), ...writeCaps("set")],
-    inputSchema: object({
-      removalId: reference,
-      records: list(recordReference, 10),
-    }),
-    resultSchema: object({}),
-    recipe: {
-      version: 1,
-      steps: [
-        ...restoreContext(),
-        batch(
-          "sets",
-          "restore-workout-set",
-          input("records"),
-          fields({
-            removalId: input("removalId"),
-            id: item("id"),
-            revision: item("revision"),
-          }),
-          10,
-        ),
-      ],
-      result: literal({}),
-    },
-  },
-  {
-    name: "restore-workout-set",
-    summary:
-      "Restore canonical set data only inside its admitted Undo transaction",
-    effect: "transaction",
-    capabilities: [...readCaps("removal"), ...writeCaps("set")],
-    inputSchema: object({ removalId: reference, ...revisionInput.properties }),
-    resultSchema: recordReference,
-    recipe: {
-      version: 1,
-      steps: [
-        ...restoreContext(),
-        {
-          id: "saved",
-          op: "restore",
-          table: "set",
-          recordId: input("id"),
-          revision: input("revision"),
-        },
-        assertion(
-          "same-occurrence",
-          equal(
-            result("saved", "data", "occurrenceId"),
-            result("removal", "data", "contextId"),
-          ),
-          "The set belongs to another exercise occurrence.",
-        ),
-        assertion(
-          "same-session",
-          equal(
-            result("saved", "data", "sessionId"),
-            result("removal", "data", "sessionId"),
-          ),
-          "The set belongs to another workout.",
-        ),
-      ],
-      result: fields({
-        id: result("saved", "id"),
-        revision: result("saved", "revision"),
-      }),
     },
   },
   {

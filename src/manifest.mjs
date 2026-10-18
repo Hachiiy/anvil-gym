@@ -1,3 +1,4 @@
+import { structureActions } from "./workouts/structure.mjs";
 import { tables } from "./domain-schema.mjs";
 import { metricActions } from "./metric-actions.mjs";
 import { metricCases } from "./metric-fixtures.mjs";
@@ -81,6 +82,7 @@ export function createGymManifest() {
       ...historyCopyActions,
       ...orderActions,
       ...removalActions,
+      ...structureActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",

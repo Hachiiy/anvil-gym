@@ -89,3 +89,56 @@ export const revisionInput = object({
   revision: { type: "integer" },
 });
 export const inputId = input("id");
+
+export const appendPosition = (step, maximum = 50) => ({
+  op: "check-number",
+  minimum: 0,
+  maximum: 1000000,
+  integer: true,
+  value: {
+    op: "if",
+    condition: {
+      op: "greater",
+      left: { op: "length", value: result(step, "records") },
+      right: literal(0),
+    },
+    then: {
+      op: "add",
+      left: {
+        op: "at",
+        source: {
+          op: "map",
+          source: result(step, "records"),
+          value: { op: "item", path: ["data", "position"] },
+          maxItems: maximum,
+        },
+        index: literal(0),
+      },
+      right: literal(1),
+    },
+    else: literal(0),
+  },
+});
+
+export const availablePosition = (step, preferred, maximum = 50) => ({
+  op: "if",
+  condition: {
+    op: "greater",
+    left: {
+      op: "length",
+      value: {
+        op: "filter",
+        source: result(step, "records"),
+        value: {
+          op: "equal",
+          left: { op: "item", path: ["data", "position"] },
+          right: preferred,
+        },
+        maxItems: maximum,
+      },
+    },
+    right: literal(0),
+  },
+  then: appendPosition(step, maximum),
+  else: preferred,
+});

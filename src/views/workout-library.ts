@@ -1,3 +1,4 @@
+import { recoveryActions, recoveryControls } from "./workout-tree-removal.js";
 import type { NativeNode } from "@anvil/app-sdk/author";
 import {
   button,
@@ -81,10 +82,16 @@ export const workouts = workoutView({
   id: "workouts",
   label: "Workouts",
   forms: [],
-  actions: ["list-active-workouts", "list-workouts"],
+  actions: [
+    "list-active-workouts",
+    "list-workouts",
+    "latest-deleted-workout",
+    ...recoveryActions,
+  ],
   sources: [
     source("active", "list-active-workouts", literal({})),
     source("recent", "list-workouts", literal({})),
+    source("removals", "latest-deleted-workout", literal({})),
   ],
   root: page("workouts", [
     heading("workouts-heading", "Workouts", 1),
@@ -119,6 +126,13 @@ export const workouts = workoutView({
         button("exercise-library", "Exercises", navigate("exercises")),
       ],
     },
+    recoveryControls("workout-undo", [
+      {
+        op: "navigate",
+        view: "workout",
+        params: object({ id: ref("event", ["data", "sessionId"]) }),
+      },
+    ]),
     list("active-workouts", active, true),
     heading("recent-heading", "History", 2),
     list("recent-workouts", recent, false),

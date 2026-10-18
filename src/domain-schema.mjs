@@ -150,12 +150,16 @@ export const recordSchemas = {
     ],
   ),
   removal: object({
+    label: text(120),
+    ordinal: integer(0, 1000001),
     scope: choice("set", "occurrence", "block", "session"),
     contextId: reference,
     contextRevision: { type: "integer" },
     sessionId: reference,
     records: removalRecords,
     remaining: list(recordReference, 50),
+    remainingOccurrences: list(recordReference, 50),
+    remainingBlocks: list(recordReference, 50),
     status: choice(
       "preparing",
       "available",

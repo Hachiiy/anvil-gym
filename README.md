@@ -1,8 +1,8 @@
 # Gym for Anvil
 
 Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current source defines eight data tables, 73 declared Core
-actions and 16 native views, with versioned metrics and editable catalog
+measurements. Its current source defines eight data tables, 91 declared Core
+actions and 17 native views, with versioned metrics and editable catalog
 provenance. Exercise edits assign new metric versions when measurement meanings
 change.
 
@@ -50,8 +50,14 @@ Undo removal. Undo survives navigation and reload, restores the same canonical
 set, and refuses to overwrite later changes to its exercise or remaining sets.
 New sets append after the highest stored position; displayed numbers follow the
 visible order. Completed workouts support adding or removing sets without
-changing their lifecycle. Exercise/block organization and removal, reports and
-legacy import remain planned. Workout and rest timers
+changing their lifecycle. Workout Details opens a compact structure view for
+removing an exercise or an entire superset/circuit with its sets. Removing the
+last exercise also removes its empty group. Details also offers Remove workout;
+the library retains its Undo across reload. All removals and restorations are
+atomic, retain canonical IDs and data, and check observed revisions. A removal
+record consumes one of the existing 100 mutation rows, so a workout at that
+boundary needs a smaller removal first. Exercise/block reordering and movement,
+reports and legacy import remain planned. Workout and rest timers
 are outside the product scope; duration is still a configurable measurement.
 Gym uses Anvil's standard App contracts and Core action gateway
 and requires an online Anvil connection. Installation does not automatically

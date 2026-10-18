@@ -14,6 +14,7 @@ import {
 } from "../expressions.mjs";
 import {
   activeSession,
+  appendPosition,
   create,
   entityInput,
   get,
@@ -31,7 +32,7 @@ export const workoutExerciseActions = [
       "Add a distinct exercise occurrence with a pinned snapshot and starter sets",
     effect: "transaction",
     capabilities: [
-      ...readCaps("session", "exercise", "occurrence", "set"),
+      ...readCaps("session", "exercise", "block", "occurrence", "set"),
       ...writeCaps("block", "occurrence", "set"),
     ],
     inputSchema: object({ sessionId: reference, exerciseId: reference }),
@@ -47,7 +48,20 @@ export const workoutExerciseActions = [
           { op: "not", value: result("exercise", "data", "archived") },
           "Choose an exercise that has not been archived.",
         ),
-        query("previous", "occurrence", "sessionId", input("sessionId"), 50),
+        {
+          ...query(
+            "previous",
+            "occurrence",
+            "sessionId",
+            result("session", "id"),
+            50,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
+        {
+          ...query("blocks", "block", "sessionId", result("session", "id"), 50),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         assertion(
           "occurrence-budget",
           binary("less", length(result("previous", "records")), literal(50)),
@@ -57,8 +71,8 @@ export const workoutExerciseActions = [
           "block",
           "block",
           fields({
-            sessionId: input("sessionId"),
-            position: length(result("previous", "records")),
+            sessionId: result("session", "id"),
+            position: appendPosition("blocks"),
             kind: literal("single"),
             rounds: literal(1),
             notes: literal(""),
@@ -68,9 +82,9 @@ export const workoutExerciseActions = [
           "saved",
           "occurrence",
           fields({
-            sessionId: input("sessionId"),
+            sessionId: result("session", "id"),
             blockId: result("block", "id"),
-            position: length(result("previous", "records")),
+            position: appendPosition("previous"),
             snapshot: fields({
               exerciseId: result("exercise", "id"),
               exerciseRevision: result("exercise", "revision"),

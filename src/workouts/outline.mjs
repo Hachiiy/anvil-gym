@@ -64,8 +64,14 @@ export const workoutOutlineActions = [
           50,
         ),
       ],
-      object({ records: list(outlinedOccurrence, 50) }),
-      fields({ records: result("outline", "results") }),
+      object({
+        records: list(outlinedOccurrence, 50),
+        ordinals: list(integer(1, 50), 50, 50),
+      }),
+      fields({
+        records: result("outline", "results"),
+        ordinals: literal(Array.from({ length: 50 }, (_, index) => index + 1)),
+      }),
     ),
     capabilities: readCaps("session", "occurrence", "block", "set"),
   },

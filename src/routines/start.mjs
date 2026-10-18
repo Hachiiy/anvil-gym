@@ -16,6 +16,7 @@ import {
 } from "../expressions.mjs";
 import {
   activeSession,
+  appendPosition,
   create,
   get,
   query,
@@ -180,6 +181,21 @@ export const routineStartActions = [
         ...sourceBlock(),
         get("session", "session", input("sessionId")),
         ...sourceSession(),
+        query("previous", "block", "sessionId", result("session", "id"), 50),
+        assertion(
+          "unused-block-position",
+          equal(
+            length(
+              filtered(
+                result("previous", "records"),
+                equal(item("data", "position"), input("blockPosition")),
+                50,
+              ),
+            ),
+            literal(0),
+          ),
+          "This routine block is already present. Use the workout structure actions.",
+        ),
         create(
           "saved",
           "block",
@@ -241,20 +257,23 @@ export const routineStartActions = [
           },
           "Use at most 10 sets per exercise, including rounds.",
         ),
-        query(
-          "previous",
-          "occurrence",
-          "sessionId",
-          result("session", "id"),
-          50,
-        ),
+        {
+          ...query(
+            "previous",
+            "occurrence",
+            "sessionId",
+            result("session", "id"),
+            50,
+          ),
+          order: [{ field: ["position"], direction: "desc" }],
+        },
         create(
           "saved",
           "occurrence",
           fields({
             sessionId: result("session", "id"),
             blockId: input("blockId"),
-            position: length(result("previous", "records")),
+            position: appendPosition("previous"),
             snapshot: result("occurrence-source", "snapshot"),
             restSeconds: result("occurrence-source", "restSeconds"),
             notes: result("occurrence-source", "notes"),

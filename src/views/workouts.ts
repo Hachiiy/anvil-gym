@@ -1,3 +1,4 @@
+import { removalConfirmation } from "./workout-tree-removal.js";
 import {
   button,
   heading,
@@ -66,6 +67,7 @@ export const workout = workoutView({
     "finish-workout",
     "abandon-workout",
     "start-history-workout",
+    "remove-workout",
   ],
   sources: [
     source("workout", "get-workout", object({ id: ref("params", ["id"]) })),
@@ -90,6 +92,21 @@ export const workout = workoutView({
     },
   ],
   dialogs: [
+    removalConfirmation(
+      "remove-workout",
+      "Remove workout?",
+      "remove-workout",
+      object({
+        id: ref("source", ["id"], "workout"),
+        revision: {
+          op: "coalesce",
+          left: ref("form", ["revision"], "workout"),
+          right: ref("source", ["revision"], "workout"),
+        },
+      }),
+      ref("source", ["data", "title"], "workout"),
+      [{ op: "navigate", view: "workouts", params: literal({}) }],
+    ),
     {
       id: "workout-details",
       label: "Workout details",
@@ -100,6 +117,39 @@ export const workout = workoutView({
         children: [
           formField("workout-title", "Title", "workout", ["title"]),
           formField("workout-notes", "Notes", "workout", ["notes"], true),
+          button(
+            "organize-workout",
+            "Workout structure",
+            [
+              {
+                op: "submit-form",
+                form: "workout",
+                onSuccess: [],
+                onFailure: [],
+              },
+              { op: "close-dialog", dialog: "workout-details" },
+              ...navigate(
+                "workout-structure",
+                object({ id: ref("params", ["id"]) }),
+              ),
+            ],
+            "ghost",
+          ),
+          button(
+            "remove-workout",
+            "Remove workout",
+            [
+              {
+                op: "submit-form",
+                form: "workout",
+                onSuccess: [],
+                onFailure: [],
+              },
+              { op: "close-dialog", dialog: "workout-details" },
+              { op: "open-dialog", dialog: "remove-workout" },
+            ],
+            "ghost",
+          ),
         ],
       },
     },
@@ -208,11 +258,11 @@ export const workout = workoutView({
                   op: "format",
                   format: "number",
                   digits: 0,
-                  value: {
-                    op: "add",
-                    left: ref("item", ["data", "position"], "exercise"),
-                    right: literal(1),
-                  },
+                  value: ref(
+                    "source",
+                    ["ordinals", { itemIndex: "exercise" }],
+                    "exercises",
+                  ),
                 },
                 ref("item", ["data", "snapshot", "name"], "exercise"),
                 ". ",

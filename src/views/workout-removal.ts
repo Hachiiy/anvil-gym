@@ -1,3 +1,4 @@
+import { removalTarget } from "./workout-tree-removal.js";
 import type {
   NativeEvent,
   NativeNode,
@@ -110,45 +111,53 @@ export const removalUndo: NativeNode = {
     maxItems: 1,
   },
   template: {
-    id: "removal-controls",
-    component: "row",
+    id: "removal-context",
+    component: "stack",
     props: { gap: "small" },
     children: [
-      button(
-        "undo-removal",
-        "Undo removal",
-        [
-          submit,
-          {
-            op: "invoke",
-            action: "undo-workout-removal",
-            input: object({
-              id: ref("item", ["id"], "removal"),
-              revision: ref("item", ["revision"], "removal"),
-            }),
-            onSuccess: refresh,
-            onFailure: [],
-          },
+      text("removal-target", removalTarget()),
+      {
+        id: "removal-controls",
+        component: "row",
+        props: { gap: "small" },
+        children: [
+          button(
+            "undo-removal",
+            "Undo removal",
+            [
+              submit,
+              {
+                op: "invoke",
+                action: "undo-workout-removal",
+                input: object({
+                  id: ref("item", ["id"], "removal"),
+                  revision: ref("item", ["revision"], "removal"),
+                }),
+                onSuccess: refresh,
+                onFailure: [],
+              },
+            ],
+            "ghost",
+          ),
+          button(
+            "dismiss-removal",
+            "Dismiss",
+            [
+              {
+                op: "invoke",
+                action: "dismiss-workout-removal",
+                input: object({
+                  id: ref("item", ["id"], "removal"),
+                  revision: ref("item", ["revision"], "removal"),
+                }),
+                onSuccess: [{ op: "refresh-source", source: "removals" }],
+                onFailure: [],
+              },
+            ],
+            "ghost",
+          ),
         ],
-        "ghost",
-      ),
-      button(
-        "dismiss-removal",
-        "Dismiss",
-        [
-          {
-            op: "invoke",
-            action: "dismiss-workout-removal",
-            input: object({
-              id: ref("item", ["id"], "removal"),
-              revision: ref("item", ["revision"], "removal"),
-            }),
-            onSuccess: [{ op: "refresh-source", source: "removals" }],
-            onFailure: [],
-          },
-        ],
-        "ghost",
-      ),
+      },
     ],
   },
 };
