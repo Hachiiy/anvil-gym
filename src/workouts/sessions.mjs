@@ -1,6 +1,16 @@
 import { recordSchemas } from "../domain-schema.mjs";
 import { object, reference, text } from "../schema.mjs";
-import { fields, input, literal, readAction, result } from "../expressions.mjs";
+import {
+  all,
+  assertion,
+  batch,
+  equal,
+  fields,
+  input,
+  literal,
+  readAction,
+  result,
+} from "../expressions.mjs";
 import {
   activeSession,
   create,
@@ -13,6 +23,13 @@ import {
   update,
   writeCaps,
 } from "./shared.mjs";
+
+const detailsInput = object({
+  id: reference,
+  revision: { type: "integer" },
+  title: text(120, 1),
+  notes: text(2000),
+});
 
 export const sessionActions = [
   {
@@ -107,12 +124,59 @@ export const sessionActions = [
       "Correct a workout title and notes without changing its logged sets",
     effect: "transaction",
     capabilities: [...readCaps("session"), ...writeCaps("session")],
-    inputSchema: object({
-      id: reference,
-      revision: { type: "integer" },
-      title: text(120, 1),
-      notes: text(2000),
-    }),
+    inputSchema: detailsInput,
+    resultSchema: rowSchema("session"),
+    recipe: {
+      version: 1,
+      steps: [
+        get("session", "session", input("id")),
+        assertion(
+          "revision",
+          equal(result("session", "revision"), input("revision")),
+          "This workout changed. Reload it before editing.",
+        ),
+        batch(
+          "saved",
+          "persist-workout-details",
+          {
+            op: "if",
+            condition: all(
+              equal(result("session", "data", "title"), input("title")),
+              equal(result("session", "data", "notes"), input("notes")),
+            ),
+            then: literal([]),
+            else: literal([0]),
+          },
+          fields({
+            id: input("id"),
+            revision: input("revision"),
+            title: input("title"),
+            notes: input("notes"),
+          }),
+          1,
+        ),
+      ],
+      result: {
+        op: "if",
+        condition: equal(
+          { op: "length", value: result("saved", "results") },
+          literal(0),
+        ),
+        then: result("session"),
+        else: {
+          op: "at",
+          source: result("saved", "results"),
+          index: literal(0),
+        },
+      },
+    },
+  },
+  {
+    name: "persist-workout-details",
+    summary: "Persist changed workout metadata using the observed revision",
+    effect: "transaction",
+    capabilities: [...readCaps("session"), ...writeCaps("session")],
+    inputSchema: detailsInput,
     resultSchema: rowSchema("session"),
     recipe: {
       version: 1,

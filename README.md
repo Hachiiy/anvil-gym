@@ -1,7 +1,7 @@
 # Gym for Anvil
 
 Gym is a standalone Anvil App for strength, basic cardio and custom exercise
-measurements. Its current source defines seven data tables, 59 declared Core
+measurements. Its current source defines seven data tables, 64 declared Core
 actions and 15 native views, with versioned metrics and editable catalog
 provenance. Exercise edits assign new metric versions when measurement meanings
 change.
@@ -37,6 +37,11 @@ autosave and an explicit Use previous action. It considers the 20 most recent
 earlier completed workouts, keeps set types distinct and copies only values whose
 pinned measurement definitions match. Actuals and completion stay unchanged;
 new or changed measurements remain blank. It does not infer progression.
+Completed workouts offer **Repeat workout**. The new session preserves grouped
+structure, rounds and pinned exercise definitions. Completed actuals become
+editable targets; unfinished sets retain their existing targets. All new actuals
+start blank and sets remain uncompleted. The source workout is unchanged and
+the copy respects the same atomic workout limits as routine starts.
 Reordering, reports and legacy import remain planned. Workout and rest timers
 are outside the product scope; duration is still a configurable measurement.
 Gym uses Anvil's standard App contracts and Core action gateway

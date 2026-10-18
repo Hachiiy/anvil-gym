@@ -65,6 +65,7 @@ export const workout = workoutView({
     "edit-workout",
     "finish-workout",
     "abandon-workout",
+    "start-history-workout",
   ],
   sources: [
     source("workout", "get-workout", object({ id: ref("params", ["id"]) })),
@@ -136,6 +137,42 @@ export const workout = workoutView({
       [{ op: "open-dialog", dialog: "workout-details" }],
       "ghost",
     ),
+    {
+      ...button(
+        "repeat-workout",
+        "Repeat workout",
+        [
+          { op: "submit-form", form: "workout", onSuccess: [], onFailure: [] },
+          {
+            op: "invoke",
+            action: "start-history-workout",
+            input: object({
+              id: ref("source", ["id"], "workout"),
+              revision: {
+                op: "coalesce",
+                left: ref("form", ["revision"], "workout"),
+                right: ref("source", ["revision"], "workout"),
+              },
+              timeZone: ref("host", ["timeZone"]),
+            }),
+            onSuccess: [
+              {
+                op: "navigate",
+                view: "workout",
+                params: object({ id: ref("event", ["id"]) }),
+              },
+            ],
+            onFailure: [],
+          },
+        ],
+        "primary",
+      ),
+      visible: {
+        op: "equal",
+        left: ref("source", ["data", "status"], "workout"),
+        right: literal("completed"),
+      },
+    },
     {
       ...button(
         "add-exercise",

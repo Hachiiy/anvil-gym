@@ -16,6 +16,8 @@ import { routineStartActions } from "./routines/start.mjs";
 import { workoutOutlineActions } from "./workouts/outline.mjs";
 import { loggingActions } from "./workouts/logging.mjs";
 import { targetActions } from "./workouts/targets.mjs";
+import { historyStartAction } from "./workouts/history-start.mjs";
+import { historyCopyActions } from "./workouts/history-copy.mjs";
 
 /** @returns {import("@anvil/app-sdk/author").AppManifest} */
 export function createGymManifest() {
@@ -73,6 +75,8 @@ export function createGymManifest() {
       ...workoutOutlineActions,
       ...loggingActions,
       ...targetActions,
+      historyStartAction,
+      ...historyCopyActions,
       {
         name: "new-measurement",
         summary: "Prepare a new custom measurement with a stable identity",
