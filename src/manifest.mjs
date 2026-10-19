@@ -25,6 +25,7 @@ import { historyCopyActions } from "./workouts/history-copy.mjs";
 import { orderActions } from "./workouts/order.mjs";
 import { removalActions } from "./workouts/removals.mjs";
 import { overviewActions } from "./workouts/overview.ts";
+import { comparisonHistoryActions } from "./workouts/comparison-history.ts";
 import { comparisonActions } from "./workouts/comparison.ts";
 import {
   routineTargetActions,
@@ -39,7 +40,7 @@ export function createGymManifest() {
       key: "gym",
       name: "Gym",
       kind: "app",
-      version: "0.2.0",
+      version: "0.2.1",
       summary: "Your workouts and routines, kept simple",
       description:
         "Build your routine, record your sets and pick up where you left off. Gym brings strength training, basic cardio and your own custom exercises into Anvil.\n\nCreate reusable routines with supersets and circuits, keep planned and performed values separate, and revisit your workout history. Measurements retain their units and meaning.\n\nUse Gym yourself or give an agent access to help you manage it. Requires an online Anvil connection.",
@@ -106,6 +107,7 @@ export function createGymManifest() {
       ...loggingActions,
       ...overviewActions,
       ...comparisonActions,
+      ...comparisonHistoryActions,
       ...routineTargetActions,
       ...routineCapacityActions,
       ...targetActions,
