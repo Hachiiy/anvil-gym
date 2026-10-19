@@ -54,6 +54,14 @@ export const blocksSummary: NativeNode = {
       {
         id: "routine-block-name",
         component: "heading",
+        visible: {
+          op: "not",
+          value: {
+            op: "equal",
+            left: ref("item", ["kind"], "block"),
+            right: literal("single"),
+          },
+        },
         props: {
           text: join(
             kindLabel(ref("item", ["kind"], "block")),
@@ -129,13 +137,22 @@ export const blocksSummary: NativeNode = {
                   },
                   "set",
                 ),
-                right: literal(" / round"),
+                right: {
+                  op: "if",
+                  condition: {
+                    op: "equal",
+                    left: ref("item", ["kind"], "block"),
+                    right: literal("single"),
+                  },
+                  then: literal(""),
+                  else: literal(" / round"),
+                },
               },
             ),
           },
         },
       },
-      button("edit-routine-block", "Edit block", [
+      button("edit-routine-block", "Edit", [
         { op: "submit-form", form: "routine", onSuccess: [], onFailure: [] },
         ...navigate(
           "routine-block",
@@ -147,7 +164,7 @@ export const blocksSummary: NativeNode = {
       ]),
       button(
         "remove-routine-block",
-        "Remove block",
+        "Remove",
         [
           {
             op: "set-form",

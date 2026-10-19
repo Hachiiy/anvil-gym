@@ -2,6 +2,8 @@ import type { NativeEvent, NativeNode } from "@anvil/app-sdk/author";
 import {
   button,
   literal,
+  navigate,
+  object,
   ref,
   type Binding,
   type FieldPath,
@@ -49,20 +51,47 @@ export const blocksEditor: NativeNode = {
   component: "stack",
   props: { gap: "normal" },
   children: [
+    button(
+      "group-options",
+      "Grouping options",
+      [
+        {
+          op: "set-state",
+          path: ["grouping"],
+          value: { op: "not", value: ref("state", ["grouping"]) },
+        },
+      ],
+      "ghost",
+    ),
     {
       id: "block-settings",
       component: "grid",
+      visible: {
+        op: "or",
+        left: ref("state", ["grouping"]),
+        right: {
+          op: "not",
+          value: {
+            op: "equal",
+            left: safe(
+              ref("form", ["value", "kind"], "routine"),
+              literal("single"),
+            ),
+            right: literal("single"),
+          },
+        },
+      },
       props: { columns: 2, gap: "normal" },
       children: [
         {
           id: "block-kind",
           component: "select",
           props: {
-            label: "Block",
+            label: "Group",
             form: "routine",
             path: ["value", "kind"],
             options: [
-              { value: "single", label: "Single" },
+              { value: "single", label: "Individual exercise" },
               { value: "superset", label: "Superset" },
               { value: "circuit", label: "Circuit" },
             ],
@@ -174,7 +203,19 @@ export const blocksEditor: NativeNode = {
                           value: length(sets),
                           digits: 0,
                         },
-                        right: literal(" sets / round"),
+                        right: {
+                          op: "if",
+                          condition: {
+                            op: "equal",
+                            left: safe(
+                              ref("form", ["value", "kind"], "routine"),
+                              literal("single"),
+                            ),
+                            right: literal("single"),
+                          },
+                          then: literal(" sets"),
+                          else: literal(" sets / round"),
+                        },
                       },
                     },
                   },
@@ -195,8 +236,19 @@ export const blocksEditor: NativeNode = {
                         "secondary",
                         {
                           op: "greater",
-                          left: length(sets),
-                          right: literal(19),
+                          left: {
+                            op: "multiply",
+                            left: {
+                              op: "add",
+                              left: length(sets),
+                              right: literal(1),
+                            },
+                            right: safe(
+                              ref("form", ["value", "rounds"], "routine"),
+                              literal(1),
+                            ),
+                          },
+                          right: literal(10),
                         },
                       ),
                       button(
@@ -224,9 +276,29 @@ export const blocksEditor: NativeNode = {
                 component: "stack",
                 props: { gap: "small" },
                 children: [
+                  button("edit-routine-targets", "Planned values", [
+                    {
+                      op: "submit-form",
+                      form: "routine",
+                      onSuccess: [],
+                      onFailure: [],
+                    },
+                    ...navigate(
+                      "routine-targets",
+                      object({
+                        id: ref("params", ["id"]),
+                        blockKey: ref("params", ["blockKey"]),
+                        occurrenceKey: safe(
+                          ref("form", [...occurrencePath, "key"], "routine"),
+                          ref("params", ["blockKey"]),
+                        ),
+                      }),
+                    ),
+                  ]),
                   {
                     id: "routine-rest",
                     component: "number-field",
+                    visible: ref("state", ["grouping"]),
                     props: {
                       label: "Rest (s)",
                       form: "routine",

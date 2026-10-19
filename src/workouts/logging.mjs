@@ -14,7 +14,7 @@ import {
   readAction,
   result,
 } from "../expressions.mjs";
-import { actualValues, setEditSchema } from "./sets.mjs";
+import { actualValues, draftMeasurements, setEditSchema } from "./sets.mjs";
 import {
   entityInput,
   get,
@@ -28,6 +28,7 @@ const edits = list(setEditSchema, 10);
 const editorSchema = object({
   draft: setEditSchema,
   targets: measurements,
+  planned: draftMeasurements,
 });
 const setFields = Object.fromEntries(
   Object.keys(setEditSchema.properties).map((key) => [key, input(key)]),
@@ -50,6 +51,12 @@ export const loggingActions = [
         input("definitions"),
         fields({ definition: item(), values: input("set", "data", "actual") }),
       ),
+      batch(
+        "planned",
+        "prepare-set-measurement",
+        input("definitions"),
+        fields({ definition: item(), values: input("set", "data", "planned") }),
+      ),
     ],
     editorSchema,
     fields({
@@ -62,6 +69,7 @@ export const loggingActions = [
         notes: input("set", "data", "notes"),
       }),
       targets: input("set", "data", "planned"),
+      planned: result("planned", "results"),
     }),
   ),
   {

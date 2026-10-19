@@ -52,7 +52,7 @@ export const appPlatformLimits = Object.freeze({
   reviewInputBytes: 1024 * 1024,
   reviewOutputTokens: 4096,
   reviewOutputBytes: 64 * 1024,
-  reviewDeadlineMs: 120000,
+  reviewLeaseSeconds: 60,
   reviewCandidates: 400,
   reviewAttempts: 3,
   agentPageItems: 20,
@@ -61,7 +61,7 @@ export const appPlatformLimits = Object.freeze({
   nativeUi: Object.freeze({
     nodes: 256,
     depth: 12,
-    expressions: 512,
+    expressions: 1536,
     expressionDepth: 16,
     eventSteps: 8,
     listItems: 100,
@@ -69,8 +69,9 @@ export const appPlatformLimits = Object.freeze({
     sources: 16,
     dialogs: 8,
     stateBytes: 64 * 1024,
-    renderedNodes: 1000,
-    evaluationSteps: 4096,
+    // Bounded collection editors can show several independently saved records.
+    renderedNodes: 4096,
+    evaluationSteps: 16384,
   }),
 });
 export const appPreviewLimits = /* @__PURE__ */ Object.freeze({

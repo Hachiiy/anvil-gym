@@ -1,6 +1,6 @@
 # Gym for Anvil
 
-Gym 0.1.2 is an installable MVP for strength, basic cardio and custom exercise
+Gym 0.2.0 is an installable App for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 
@@ -14,11 +14,17 @@ Installation keeps data separate from other Apps and does not grant an agent
 access. Enable Gym separately for each agent that should use it. The owner
 performs the first official installation.
 
-## MVP scope
+## Workouts and routines
 
 - Exercise library with 19 starter entries, custom exercises and measurements.
-- Reusable routines with individual exercises, supersets and circuits.
-- Online workout logging, separate planned and actual values, and corrections.
+- Reusable routines with planned measurements for each set. Grouping options
+  expose supersets, circuits and rounds when needed.
+- A workout overview with six exercise cards per page, inline measurements and
+  Done controls. Further measurements, set types and notes remain in Details.
+- Planned and compatible previous values beside each set. Use plan and Use
+  previous fill an empty set without marking it completed or replacing edits.
+- Online autosave, visible save feedback, corrections and finish confirmation.
+  Finishing a workout preserves unfinished sets and never rewrites its routine.
 - Paged history, repeat workout, ordering, removal and revision-checked Undo.
 - Shared Core actions for manual controls and authorized agents.
 
@@ -30,16 +36,22 @@ remains an explicit measurement for cardio and custom exercises.
 The initial workout profile supports 50 exercise occurrences and 10 sets per
 occurrence, within Anvil's existing data and transaction bounds. Libraries page
 through 50 entries. Templates support 30 blocks, 12 occurrences per block and
-20 planned sets, but a started workout must fit the workout and transaction
-bounds. Oversized starts fail atomically rather than creating partial workouts.
+20 planned sets. The editor limits new sets to 10 expanded sets per exercise
+and explains routines that exceed workout or transaction capacity. Oversized
+starts fail atomically rather than creating partial workouts.
+
+Previous values come from the 20 most recent completed sessions. Only completed
+sets with compatible measurement identities, versions, units and load meanings
+are offered. Set kind is preserved; matching round and position are preferred,
+with the last completed set of that kind as fallback. Missing values stay blank.
 
 Saved reports, muscle maps, Gym chat widgets, legacy import/export and external
 integrations are deferred. Offline editing is not supported.
 
 ## Development
 
-Use Node.js 22 or later, then `npm ci` and `npm run check`. The standalone SDK
-2.11.0 is included through the local dependency [tools/sdk](tools/sdk); no private
+Use Node.js 24 or later, then `npm ci` and `npm run check`. The standalone SDK
+2.12.0 is included through the local dependency [tools/sdk](tools/sdk); no private
 workspace or npm registry is needed. Its 50-file hash snapshot is checked
 by the author validation. See [tool provenance](tools/README.md).
 
@@ -55,8 +67,8 @@ by the author validation. See [tool provenance](tools/README.md).
   does not install the App, grant agent access or start a model call.
 
 Static conformance validates the package; it does not execute business actions
-or prove a model claim. The MVP retains the previously accepted Core and
-responsive browser behavior. Broader feature acceptance remains in progress.
+or prove a model claim. Focused acceptance covers routine targets, exact revisions, the overview,
+copying previous values, zeros, pagination, autosave, reload and finishing.
 All verification fixtures are fictional.
 
 ## License and starter catalog

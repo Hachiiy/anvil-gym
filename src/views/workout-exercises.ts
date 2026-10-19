@@ -58,8 +58,8 @@ export const chooseExercise = workoutView({
                 onSuccess: [
                   {
                     op: "navigate",
-                    view: "workout-exercise",
-                    params: object({ id: ref("event", ["id"]) }),
+                    view: "workout",
+                    params: paramsId(),
                   },
                 ],
                 onFailure: [],

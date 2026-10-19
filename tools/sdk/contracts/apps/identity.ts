@@ -83,6 +83,10 @@ export const appCatalogImageRoles = [
   "screenshot-4",
   "screenshot-5",
   "screenshot-6",
+  "screenshot-7",
+  "screenshot-8",
+  "screenshot-9",
+  "screenshot-10",
 ] as const;
 export const appCatalogImageRoleSchema = z.enum(appCatalogImageRoles);
 export function isAppCatalogImageRole(

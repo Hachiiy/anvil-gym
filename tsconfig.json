@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "allowJs": true,
     "checkJs": false,
-    "types": []
+    "types": [],
+    "allowImportingTsExtensions": true
   },
   "include": ["src/app.ts"]
 }

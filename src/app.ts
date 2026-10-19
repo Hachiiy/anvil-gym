@@ -4,6 +4,8 @@ import { createGymManifest } from "./manifest.mjs";
 import { exerciseLibrary } from "./views/exercise-library.js";
 import { exerciseEditor } from "./views/exercise-editor.js";
 import { workouts, startWorkout, workout } from "./views/workouts.js";
+import { workoutOverview } from "./views/workout-overview.js";
+import { routineTargets } from "./views/routine-targets.js";
 import { chooseExercise } from "./views/workout-exercises.js";
 import { workoutLogging } from "./views/workout-logging.js";
 import { workoutSet } from "./views/workout-set.js";
@@ -25,6 +27,7 @@ export default defineApp({
   ui: [
     workouts,
     startWorkout,
+    workoutOverview,
     workout,
     chooseExercise,
     workoutLogging,
@@ -37,6 +40,7 @@ export default defineApp({
     newRoutine,
     routineEditor,
     routineBlockEditor,
+    routineTargets,
     exerciseLibrary,
     starterCatalog,
     exerciseEditor(false),

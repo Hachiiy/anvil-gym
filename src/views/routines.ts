@@ -117,9 +117,11 @@ export const routineEditor = workoutView({
     "list-exercises",
     "prepare-routine-block",
     "start-routine-workout",
+    "get-routine-capacity",
   ],
   sources: [
     source("routine", "get-routine", paramsId()),
+    source("capacity", "get-routine-capacity", paramsId()),
     source("exercises", "list-exercises", literal({ archived: false })),
   ],
   forms: [
@@ -182,14 +184,16 @@ export const routineEditor = workoutView({
         },
       ],
       "primary",
-      {
-        op: "equal",
-        left: { op: "length", value: routineBlocks },
-        right: literal(0),
-      },
+      { op: "not", value: ref("source", ["canStart"], "capacity") },
     ),
+    {
+      id: "capacity-help",
+      component: "text",
+      visible: { op: "not", value: ref("source", ["canStart"], "capacity") },
+      props: { text: ref("source", ["message"], "capacity") },
+    },
     blocksSummary,
-    button("add-routine-block", "Add block", pickExercise(), "secondary", {
+    button("add-routine-block", "Add exercise", pickExercise(), "secondary", {
       op: "greater",
       left: { op: "length", value: routineBlocks },
       right: literal(29),
@@ -209,7 +213,16 @@ export const routineEditor = workoutView({
 
 export const routineBlockEditor = workoutView({
   id: "routine-block",
-  label: "Routine block",
+  label: "Routine exercise",
+  state: {
+    schema: {
+      type: "object",
+      properties: { grouping: { type: "boolean" } },
+      required: ["grouping"],
+      additionalProperties: false,
+    },
+    initial: { grouping: false },
+  },
   paramsSchema: {
     type: "object",
     properties: {
@@ -262,7 +275,7 @@ export const routineBlockEditor = workoutView({
       ],
       "ghost",
     ),
-    heading("block-heading", "Block", 1),
+    heading("block-heading", "Exercise", 1),
     blocksEditor,
   ]),
 });
