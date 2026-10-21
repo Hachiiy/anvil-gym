@@ -1,6 +1,6 @@
 # Standalone public App SDK
 
-`sdk/` contains the Apache-2.0 Anvil App author profile 2.12.0 source distribution.
+`sdk/` contains the Apache-2.0 Anvil App author profile 2.13.0 source distribution.
 It includes typed native definition builders, package/archive validation,
 static conformance, the author-only TypeScript compiler/CLI and their bounded
 App contract dependencies. It contains no server, deployment configuration,
@@ -11,7 +11,7 @@ publication through local GitHub CLI authentication. Release identity stays
 outside the repository; publication never installs Gym or starts model work. These author tools never enter installed Apps.
 
 `sdk/snapshot.json` records the source revision and state and SHA-256 of all 50
-exported tool files. SDK 2.12.0 is exported from clean committed product source; the snapshot records that exact revision. Native manifests remain capped at 4 MiB and 128,000 JSON
+exported tool files. SDK 2.13.0 is exported from clean committed product source; the snapshot records that exact revision. Native manifests remain capped at 4 MiB and 128,000 JSON
 nodes; retained Core data JSON defaults remain 512 KiB and 32,000 nodes, and other
 Core action input/result/record/intermediate limits are unchanged. The SDK permits
 up to 128 declared actions per manifest and native view; this does not expand
@@ -43,3 +43,8 @@ clean snapshot records the exact committed SDK source revision.
 SDK 2.12 raises only bounded native presentation capacity: 1,536 expressions,
 4,096 expanded nodes and 16,384 evaluation steps. Core transaction, input,
 result and query limits remain unchanged.
+
+SDK 2.13 adds the standard creation-only `initialAgent` profile. Publishers
+provide bounded name, role and instructions only; Anvil owns initial App-only
+authority and the durable creation receipt. App lifecycle operations never
+manage the created agent.

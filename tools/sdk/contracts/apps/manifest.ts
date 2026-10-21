@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { appPlatformLimits as limits } from "../limits.js";
+import { appPlatformLimits as limits, agentProfileLimits } from "../limits.js";
 import {
   appCatalogImageRoles,
   appCompatibilitySchema,
@@ -67,6 +67,16 @@ export const appManifestSchema = z.strictObject({
     license: z.string().min(1).max(100),
   }),
   publisher: z.strictObject({ displayName: z.string().min(1).max(100) }),
+  initialAgent: z
+    .strictObject({
+      name: z.string().trim().min(1).max(agentProfileLimits.maxNameCharacters),
+      role: z.string().trim().min(1).max(agentProfileLimits.maxRoleCharacters),
+      systemInstructions: z
+        .string()
+        .min(1)
+        .max(agentProfileLimits.maxSystemInstructionsCharacters),
+    })
+    .optional(),
   compatibility: appCompatibilitySchema,
   assets: z
     .array(

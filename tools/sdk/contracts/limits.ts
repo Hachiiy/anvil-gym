@@ -92,3 +92,9 @@ export const nativeVisualLimits = /* @__PURE__ */ Object.freeze({
   extent: 2048,
   magnitude: 1e12,
 });
+export const agentProfileLimits = Object.freeze({
+  maxNameCharacters: 60,
+  maxRoleCharacters: 120,
+  maxPersonalityCharacters: 4000,
+  maxSystemInstructionsCharacters: 16000,
+});

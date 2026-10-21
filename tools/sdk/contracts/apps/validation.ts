@@ -17,6 +17,8 @@ export function parseAppManifest(value: unknown): AppManifest {
 
 export function validateAppManifest(manifest: AppManifest): string[] {
   const errors: string[] = [];
+  if (manifest.initialAgent && manifest.package.kind !== "app")
+    errors.push("Only Apps can declare an initial agent.");
   const unique = (names: readonly string[], label: string) => {
     if (new Set(names).size !== names.length)
       errors.push(`Duplicate ${label}.`);

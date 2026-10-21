@@ -1,18 +1,26 @@
 # Gym for Anvil
 
-Gym 0.2.1 is an installable App for strength, basic cardio and custom exercise
+Gym 0.3.0 is an installable App for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 
 ## Install
 
-Open **Anvil → Market**, find **Gym**, choose an available reviewing agent
-and select **Install**. Accept the permissions after the exact package
-review completes. If Gym is missing, refresh the Market catalog.
+Open **Anvil → Market**, find **Gym** and select **Install**. Review in chat
+is optional and separate. If Gym is missing, refresh the Market catalog.
 
-Installation keeps data separate from other Apps and does not grant an agent
-access. Enable Gym separately for each agent that should use it. The owner
-performs the first official installation.
+Installation keeps data separate from other Apps and includes **Personal Trainer**,
+an ordinary agent configured for Gym with access to Gym only. It inherits the
+workspace model and starts no model work on installation. An explicit update
+can create the trainer once for an existing installation.
+
+The trainer follows Anvil’s standard `initialAgent` contract: after creation,
+only the owner controls its settings. Updates, disable, uninstall, data deletion
+and reinstall never edit, delete or recreate it, even after an owner deletes
+the agent. Its configured Gym grant remains unchanged on uninstall; Gym is
+unavailable until reinstalled. Owner edits and revoked access remain intact.
+Current Gym capabilities are discovered normally, without updating the agent’s
+instructions. Other agents require their own explicit Gym assignment.
 
 ## Workouts and routines
 
@@ -51,7 +59,7 @@ integrations are deferred. Offline editing is not supported.
 ## Development
 
 Use Node.js 24 or later, then `npm ci` and `npm run check`. The standalone SDK
-2.12.0 is included through the local dependency [tools/sdk](tools/sdk); no private
+2.13.0 is included through the local dependency [tools/sdk](tools/sdk); no private
 workspace or npm registry is needed. Its 50-file hash snapshot is checked
 by the author validation. See [tool provenance](tools/README.md).
 
