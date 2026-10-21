@@ -1,5 +1,7 @@
 import { libraryActions } from "./library-actions.mjs";
 import { initialTrainer } from "./trainer.mjs";
+import { workoutScreenAction } from "./workouts/screen.ts";
+import { homeActions } from "./workouts/home.mjs";
 import { groupEditorAction } from "./workouts/group-editor.mjs";
 import { arrangementActions } from "./workouts/arrangement.mjs";
 import { structureActions } from "./workouts/structure.mjs";
@@ -41,7 +43,7 @@ export function createGymManifest() {
       key: "gym",
       name: "Gym",
       kind: "app",
-      version: "0.3.0",
+      version: "0.4.0",
       summary: "Your workouts and routines, kept simple",
       description:
         "Build your routine, record your sets and pick up where you left off. Gym brings strength training, basic cardio and your own custom exercises into Anvil.\n\nCreate reusable routines with supersets and circuits, keep planned and performed values separate, and revisit your workout history. Measurements retain their units and meaning.\n\nUse Gym yourself or give an agent access to help you manage it. Requires an online Anvil connection.",
@@ -107,7 +109,9 @@ export function createGymManifest() {
       ...routineStartActions,
       ...workoutOutlineActions,
       ...loggingActions,
-      ...overviewActions,
+      ...overviewActions.filter((action) => action.name !== "get-workout-card"),
+      workoutScreenAction,
+      ...homeActions,
       ...comparisonActions,
       ...comparisonHistoryActions,
       ...routineTargetActions,

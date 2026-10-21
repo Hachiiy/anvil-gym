@@ -199,11 +199,18 @@ export function overviewCard(slot: number): NativeNode {
             ),
           ),
           visible: {
-            op: "not",
-            value: {
-              op: "equal",
-              left: ref("source", ["dateKey"], compareName(slot)),
-              right: literal(""),
+            op: "and",
+            left: {
+              op: "present",
+              value: ref("source", ["dateKey"], compareName(slot)),
+            },
+            right: {
+              op: "not",
+              value: {
+                op: "equal",
+                left: ref("source", ["dateKey"], compareName(slot)),
+                right: literal(""),
+              },
             },
           },
         },
@@ -277,7 +284,6 @@ export function overviewCard(slot: number): NativeNode {
                 },
               },
               comparison(slot),
-              { id: `divider-${slot}`, component: "divider", props: {} },
             ],
           },
         },
@@ -301,9 +307,7 @@ export function overviewCard(slot: number): NativeNode {
                         ref("params", ["id"]),
                       ),
                     }),
-                    onSuccess: [
-                      { op: "refresh-source", source: cardName(slot) },
-                    ],
+                    onSuccess: [{ op: "refresh-source", source: "screen" }],
                     onFailure: [],
                   },
                 ],
@@ -322,10 +326,16 @@ export function overviewCard(slot: number): NativeNode {
               ),
               visible: {
                 op: "equal",
-                left: ref("source", ["data", "status"], "workout"),
+                left: ref("source", ["workout", "data", "status"], "screen"),
                 right: literal("active"),
               },
             },
+            button(
+              `previous-${slot}`,
+              "Previous values",
+              [{ op: "refresh-source", source: compareName(slot) }],
+              "ghost",
+            ),
             button(
               `details-${slot}`,
               "Details",

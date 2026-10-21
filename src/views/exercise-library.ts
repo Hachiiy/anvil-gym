@@ -28,7 +28,7 @@ export const exerciseLibrary = defineView({
     component: "page",
     props: { gap: "normal" },
     children: [
-      button("workouts", "Workouts", navigate("workouts"), "ghost"),
+      button("library", "Library", navigate("library"), "ghost"),
       heading("library-title", "Exercises", 1),
       {
         id: "exercise-library-actions",

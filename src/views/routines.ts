@@ -24,7 +24,7 @@ export const routineLibrary = workoutView({
   label: "Routines",
   ...routinePaging,
   root: page("routines", [
-    button("back-workouts", "Workouts", navigate("workouts"), "ghost"),
+    button("back-library", "Library", navigate("library"), "ghost"),
     heading("routines-heading", "Routines", 1),
     {
       id: "routine-library-actions",
@@ -95,7 +95,7 @@ export const newRoutine = workoutView({
     },
   ],
   root: page("new-routine", [
-    button("back-routines", "Routines", navigate("routines"), "ghost"),
+    button("back-routines", "Library", navigate("library"), "ghost"),
     heading("new-routine-heading", "New routine", 1),
     formField("new-routine-name", "Name", "routine", ["name"]),
     button(
@@ -147,10 +147,10 @@ export const routineEditor = workoutView({
   root: page("routine", [
     button(
       "back-routines",
-      "Routines",
+      "Library",
       [
         { op: "submit-form", form: "routine", onSuccess: [], onFailure: [] },
-        ...navigate("routines"),
+        ...navigate("library"),
       ],
       "ghost",
     ),

@@ -1,3 +1,5 @@
+import { history } from "./views/workout-library.js";
+import { library } from "./views/library.js";
 import { workoutGroup } from "./views/workout-group.js";
 import { defineApp } from "@anvil/app-sdk/author";
 import { createGymManifest } from "./manifest.mjs";
@@ -26,6 +28,8 @@ export default defineApp({
   ...createGymManifest(),
   ui: [
     workouts,
+    history,
+    library,
     startWorkout,
     workoutOverview,
     workout,
@@ -45,5 +49,8 @@ export default defineApp({
     starterCatalog,
     exerciseEditor(false),
     exerciseEditor(true),
-  ],
+  ].map((view) => ({
+    ...view,
+    navigation: ["workouts", "history", "library"].includes(view.id),
+  })),
 });

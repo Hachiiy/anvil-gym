@@ -15,6 +15,7 @@ const nativeViewShape = z.strictObject({
   id: appKeySchema,
   label: z.string().min(1).max(80),
   surface: z.enum(["app", "widget"]),
+  navigation: z.boolean().optional(),
   renderer: z.literal("native"),
   requiresComponents: z.record(appKeySchema, z.number().int().positive()),
   paramsSchema: object,
@@ -26,6 +27,10 @@ const nativeViewShape = z.strictObject({
         action: appKeySchema,
         initial: nativeExpressionSchema,
         commit: z.enum(["explicit", "autosave"]),
+        refreshSources: z
+          .array(appKeySchema)
+          .max(appPlatformLimits.nativeUi.sources)
+          .optional(),
         onSuccess: nativeLocalSequenceSchema.optional(),
         onFailure: nativeLocalSequenceSchema.optional(),
       }),

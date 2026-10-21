@@ -8,7 +8,7 @@ import {
   workoutView,
 } from "./workout-helpers.js";
 
-export { workouts } from "./workout-library.js";
+export { workouts } from "./training-home.js";
 
 export const startWorkout = workoutView({
   id: "start-workout",

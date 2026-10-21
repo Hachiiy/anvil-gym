@@ -96,7 +96,7 @@ export const button = (
   onPress: Extract<NativeNode, { component: "button" }>["onPress"],
   tone: "primary" | "secondary" | "ghost" = "secondary",
   disabled?: boolean | Binding,
-): NativeNode => ({
+): Extract<NativeNode, { component: "button" }> => ({
   id,
   component: "button",
   props: { label, tone, ...(disabled === undefined ? {} : { disabled }) },

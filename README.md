@@ -1,6 +1,6 @@
 # Gym for Anvil
 
-Gym 0.3.0 is an installable App for strength, basic cardio and custom exercise
+Gym 0.4.0 is an installable App for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 
@@ -27,9 +27,14 @@ instructions. Other agents require their own explicit Gym assignment.
 - Exercise library with 19 starter entries, custom exercises and measurements.
 - Reusable routines with planned measurements for each set. Grouping options
   expose supersets, circuits and rounds when needed.
+- Three primary sections: Train, History and Library. Start a free workout or a
+  routine directly from Train; creation and advanced editors stay contextual.
+- One aggregate read loads the workout and its present cards. Empty positions
+  trigger no reads; unchanged autosave forms trigger no writes on navigation.
 - A workout overview with six exercise cards per page, inline measurements and
   Done controls. Further measurements, set types and notes remain in Details.
-- Planned and compatible previous values beside each set. Use plan and Use
+- Planned values beside each set, with compatible history loaded only through
+  Previous values. Use plan and Use
   previous fill an empty set without marking it completed or replacing edits.
 - Online autosave, visible save feedback, corrections and finish confirmation.
   Finishing a workout preserves unfinished sets and never rewrites its routine.
@@ -59,7 +64,7 @@ integrations are deferred. Offline editing is not supported.
 ## Development
 
 Use Node.js 24 or later, then `npm ci` and `npm run check`. The standalone SDK
-2.13.0 is included through the local dependency [tools/sdk](tools/sdk); no private
+2.14.0 is included through the local dependency [tools/sdk](tools/sdk); no private
 workspace or npm registry is needed. Its 50-file hash snapshot is checked
 by the author validation. See [tool provenance](tools/README.md).
 

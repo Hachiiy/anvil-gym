@@ -69,56 +69,32 @@ const list = (id: string, items: Binding, ongoing: boolean): NativeNode => ({
     ],
   },
 });
-export const workouts = workoutView({
-  id: "workouts",
-  label: "Workouts",
+export const history = workoutView({
+  id: "history",
+  label: "History",
   state: historyPaging.state,
   forms: historyPaging.forms,
   dialogs: historyPaging.dialogs,
   actions: [
     ...historyPaging.actions,
-    "list-active-workouts",
     "latest-deleted-workout",
     ...recoveryActions,
   ],
   sources: [
-    source("active", "list-active-workouts", literal({})),
     ...historyPaging.sources,
-    source("removals", "latest-deleted-workout", literal({})),
+    {
+      ...source("removals", "latest-deleted-workout", literal({})),
+      refresh: "manual",
+    },
   ],
   root: page("workouts", [
-    heading("workouts-heading", "Workouts", 1),
-    {
-      id: "workout-navigation",
-      component: "row",
-      props: { gap: "small", wrap: true },
-      children: [
-        {
-          id: "start-choice",
-          component: "condition",
-          props: {
-            when: {
-              op: "greater",
-              left: { op: "length", value: active },
-              right: literal(0),
-            },
-          },
-          then: button(
-            "start-another",
-            "New workout",
-            navigate("start-workout"),
-          ),
-          else: button(
-            "start-workout",
-            "Start workout",
-            navigate("start-workout"),
-            "primary",
-          ),
-        },
-        button("routines", "Routines", navigate("routines")),
-        button("exercise-library", "Exercises", navigate("exercises")),
-      ],
-    },
+    heading("history-title", "History", 1),
+    button(
+      "recently-deleted",
+      "Recently deleted",
+      [{ op: "refresh-source", source: "removals" }],
+      "ghost",
+    ),
     recoveryControls("workout-undo", [
       {
         op: "navigate",
@@ -126,16 +102,11 @@ export const workouts = workoutView({
         params: object({ id: ref("event", ["data", "sessionId"]) }),
       },
     ]),
-    list("active-workouts", active, true),
     {
       id: "history-heading",
       component: "row",
       props: { gap: "small", wrap: true },
-      children: [
-        heading("recent-heading", "History", 2),
-        filterButton,
-        ...libraryFilterBadges("status"),
-      ],
+      children: [filterButton, ...libraryFilterBadges("status")],
     },
     libraryPageControls("top"),
     ...libraryFeedback("No workout history"),

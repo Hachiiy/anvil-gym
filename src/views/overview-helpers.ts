@@ -7,7 +7,7 @@ export const compareName = (slot: number) => `previous-${slot}`;
 export const loggingValue = (
   slot: number,
   ...path: (string | number | { itemIndex: string })[]
-) => ref("source", path, cardName(slot));
+) => ref("source", ["cards", slot, ...path], "screen");
 export const safe = (left: Binding, right: Binding): Binding => ({
   op: "coalesce",
   left,

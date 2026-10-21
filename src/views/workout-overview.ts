@@ -27,9 +27,13 @@ const pageControl = (forward: boolean) =>
       {
         op: "set-state",
         path: ["page"],
-        value: ref("source", [forward ? "nextPage" : "previousPage"], "page"),
+        value: ref(
+          "source",
+          ["page", forward ? "nextPage" : "previousPage"],
+          "screen",
+        ),
       },
-      { op: "refresh-source", source: "page" },
+      { op: "refresh-source", source: "screen" },
     ],
     "ghost",
     forward
@@ -42,7 +46,7 @@ const pageControl = (forward: boolean) =>
               left: { op: "add", left: pageIndex, right: literal(1) },
               right: literal(cardCount),
             },
-            right: ref("source", ["total"], "page"),
+            right: ref("source", ["page", "total"], "screen"),
           },
         }
       : { op: "equal", left: pageIndex, right: literal(0) },
@@ -62,9 +66,7 @@ export const workoutOverview = workoutView({
     initial: { page: 0 },
   },
   actions: [
-    "get-workout",
-    "get-workout-page",
-    "get-workout-card",
+    "get-workout-screen",
     "get-workout-comparison",
     "record-workout-card",
     "add-workout-set",
@@ -72,29 +74,27 @@ export const workoutOverview = workoutView({
     "start-history-workout",
   ],
   sources: [
-    source("workout", "get-workout", entity),
     source(
-      "page",
-      "get-workout-page",
+      "screen",
+      "get-workout-screen",
       object({ sessionId: ref("params", ["id"]), page: pageIndex }),
     ),
-    ...indices.flatMap((slot) => [
-      source(
-        cardName(slot),
-        "get-workout-card",
-        object({ ids: ref("source", ["slots", slot, "ids"], "page") }),
-      ),
-      source(
+    ...indices.map((slot) => ({
+      ...source(
         compareName(slot),
         "get-workout-comparison",
-        object({ ids: ref("source", ["slots", slot, "ids"], "page") }),
+        object({
+          ids: ref("source", ["page", "slots", slot, "ids"], "screen"),
+        }),
       ),
-    ]),
+      refresh: "manual" as const,
+    })),
   ],
   forms: indices.map((slot) => ({
     id: cardName(slot),
     action: "record-workout-card",
     commit: "autosave",
+    refreshSources: ["screen"],
     initial: safe(
       object({
         occurrenceId: safe(
@@ -132,7 +132,7 @@ export const workoutOverview = workoutView({
               op: "format",
               format: "number",
               digits: 0,
-              value: ref("source", ["completed"], "page"),
+              value: ref("source", ["page", "completed"], "screen"),
             },
             literal("completed sets"),
             " ",
@@ -151,11 +151,11 @@ export const workoutOverview = workoutView({
               action: "finish-workout",
               input: object({
                 id: ref("params", ["id"]),
-                revision: ref("source", ["revision"], "workout"),
+                revision: ref("source", ["workout", "revision"], "screen"),
               }),
               onSuccess: [
                 { op: "close-dialog", dialog: "finish" },
-                { op: "refresh-source", source: "workout" },
+                { op: "refresh-source", source: "screen" },
               ],
               onFailure: [],
             },
@@ -167,29 +167,70 @@ export const workoutOverview = workoutView({
   ],
   root: page("workout-overview", [
     {
-      id: "workout-navigation",
+      id: "workout-header",
       component: "row",
-      props: { gap: "small", wrap: true },
+      props: { gap: "small", wrap: true, align: "center" },
       children: [
-        button(
-          "all-workouts",
-          "Workouts",
-          navigateFromCards("workouts"),
-          "ghost",
-        ),
-        button("library", "Library", navigateFromCards("routines"), "ghost"),
+        {
+          id: "workout-title",
+          component: "heading",
+          props: {
+            text: ref("source", ["workout", "data", "title"], "screen"),
+            level: 1,
+          },
+        },
         button(
           "details",
           "Details",
           navigateFromCards("workout-details", entity),
           "ghost",
         ),
+        {
+          ...button(
+            "finish-workout",
+            "Finish",
+            [...submitCards, { op: "open-dialog", dialog: "finish" }],
+            "primary",
+          ),
+          visible: {
+            op: "equal",
+            left: ref("source", ["workout", "data", "status"], "screen"),
+            right: literal("active"),
+          },
+        },
+        {
+          ...button(
+            "repeat-workout",
+            "Repeat workout",
+            [
+              ...submitCards,
+              {
+                op: "invoke",
+                action: "start-history-workout",
+                input: object({
+                  id: ref("params", ["id"]),
+                  revision: ref("source", ["workout", "revision"], "screen"),
+                  timeZone: ref("host", ["timeZone"]),
+                }),
+                onSuccess: [
+                  {
+                    op: "navigate",
+                    view: "workout",
+                    params: object({ id: ref("event", ["id"]) }),
+                  },
+                ],
+                onFailure: [],
+              },
+            ],
+            "primary",
+          ),
+          visible: {
+            op: "equal",
+            left: ref("source", ["workout", "data", "status"], "screen"),
+            right: literal("completed"),
+          },
+        },
       ],
-    },
-    {
-      id: "workout-title",
-      component: "heading",
-      props: { text: ref("source", ["data", "title"], "workout"), level: 1 },
     },
     text(
       "workout-progress",
@@ -199,13 +240,13 @@ export const workoutOverview = workoutView({
             op: "format",
             format: "number",
             digits: 0,
-            value: ref("source", ["completed"], "page"),
+            value: ref("source", ["page", "completed"], "screen"),
           },
           {
             op: "format",
             format: "number",
             digits: 0,
-            value: ref("source", ["sets"], "page"),
+            value: ref("source", ["page", "sets"], "screen"),
           },
           " / ",
         ),
@@ -213,51 +254,6 @@ export const workoutOverview = workoutView({
         " ",
       ),
     ),
-    {
-      ...button(
-        "finish-workout",
-        "Finish",
-        [...submitCards, { op: "open-dialog", dialog: "finish" }],
-        "primary",
-      ),
-      visible: {
-        op: "equal",
-        left: ref("source", ["data", "status"], "workout"),
-        right: literal("active"),
-      },
-    },
-    {
-      ...button(
-        "repeat-workout",
-        "Repeat workout",
-        [
-          ...submitCards,
-          {
-            op: "invoke",
-            action: "start-history-workout",
-            input: object({
-              id: ref("params", ["id"]),
-              revision: ref("source", ["revision"], "workout"),
-              timeZone: ref("host", ["timeZone"]),
-            }),
-            onSuccess: [
-              {
-                op: "navigate",
-                view: "workout",
-                params: object({ id: ref("event", ["id"]) }),
-              },
-            ],
-            onFailure: [],
-          },
-        ],
-        "primary",
-      ),
-      visible: {
-        op: "equal",
-        left: ref("source", ["data", "status"], "workout"),
-        right: literal("completed"),
-      },
-    },
     ...indices.map(overviewCard),
     {
       ...button(
@@ -267,9 +263,17 @@ export const workoutOverview = workoutView({
       ),
       visible: {
         op: "equal",
-        left: ref("source", ["data", "status"], "workout"),
+        left: ref("source", ["workout", "data", "status"], "screen"),
         right: literal("active"),
       },
+    },
+    {
+      id: "workout-navigation",
+      component: "row",
+      props: { gap: "small", wrap: true },
+      children: [
+        button("all-workouts", "Train", navigateFromCards("workouts"), "ghost"),
+      ],
     },
     {
       id: "exercise-pages",
@@ -277,7 +281,7 @@ export const workoutOverview = workoutView({
       props: {
         when: {
           op: "greater",
-          left: ref("source", ["total"], "page"),
+          left: ref("source", ["page", "total"], "screen"),
           right: literal(cardCount),
         },
       },

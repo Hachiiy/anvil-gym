@@ -90,6 +90,9 @@ export function validateNativeView(
   for (const form of view.forms) {
     const at = `form:${form.id}`,
       action = check.action(form.action, at);
+    for (const source of form.refreshSources ?? [])
+      if (!view.sources.some((item) => item.id === source))
+        check.fail(at, "The form refresh source is unavailable.");
     if (form.commit === "autosave" && action?.effect !== "transaction")
       check.fail(at, "Autosave requires a transaction action.");
     const initial = check.expression(form.initial, check.scope, at);
