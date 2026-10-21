@@ -1,6 +1,6 @@
 # Gym for Anvil
 
-Gym 0.4.0 is an installable App for strength, basic cardio and custom exercise
+Gym 0.4.1 is an installable App for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 

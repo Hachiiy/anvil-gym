@@ -139,6 +139,28 @@ export const routineEditor = workoutView({
   ],
   dialogs: [
     {
+      id: "options",
+      label: "Routine options",
+      root: page("routine-options-fields", [
+        formField(
+          "routine-notes",
+          "Notes",
+          "routine",
+          ["value", "notes"],
+          true,
+        ),
+        {
+          id: "routine-archive",
+          component: "checkbox",
+          props: {
+            label: "Archived",
+            form: "routine",
+            path: ["value", "archived"],
+          },
+        },
+      ]),
+    },
+    {
       id: "exercise-picker",
       label: "Choose exercise",
       root: exercisePicker("routine"),
@@ -198,16 +220,12 @@ export const routineEditor = workoutView({
       left: { op: "length", value: routineBlocks },
       right: literal(29),
     }),
-    formField("routine-notes", "Notes", "routine", ["value", "notes"], true),
-    {
-      id: "routine-archive",
-      component: "checkbox",
-      props: {
-        label: "Archived",
-        form: "routine",
-        path: ["value", "archived"],
-      },
-    },
+    button(
+      "routine-options",
+      "Routine options",
+      [{ op: "open-dialog", dialog: "options" }],
+      "ghost",
+    ),
   ]),
 });
 

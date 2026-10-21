@@ -181,14 +181,14 @@ export const workoutOverview = workoutView({
         },
         button(
           "details",
-          "Details",
+          "Workout details",
           navigateFromCards("workout-details", entity),
           "ghost",
         ),
         {
           ...button(
             "finish-workout",
-            "Finish",
+            "Finish workout",
             [...submitCards, { op: "open-dialog", dialog: "finish" }],
             "primary",
           ),
@@ -232,34 +232,55 @@ export const workoutOverview = workoutView({
         },
       ],
     },
-    text(
-      "workout-progress",
-      join(
+    {
+      ...text(
+        "workout-progress",
         join(
-          {
-            op: "format",
-            format: "number",
-            digits: 0,
-            value: ref("source", ["page", "completed"], "screen"),
-          },
-          {
-            op: "format",
-            format: "number",
-            digits: 0,
-            value: ref("source", ["page", "sets"], "screen"),
-          },
-          " / ",
+          join(
+            {
+              op: "format",
+              format: "number",
+              digits: 0,
+              value: ref("source", ["page", "completed"], "screen"),
+            },
+            {
+              op: "format",
+              format: "number",
+              digits: 0,
+              value: ref("source", ["page", "sets"], "screen"),
+            },
+            " / ",
+          ),
+          literal("sets complete"),
+          " ",
         ),
-        literal("sets complete"),
-        " ",
       ),
-    ),
+      visible: {
+        op: "greater",
+        left: ref("source", ["page", "sets"], "screen"),
+        right: literal(0),
+      },
+    },
+    {
+      id: "empty-workout",
+      component: "empty-state",
+      props: {
+        title: "Add your first exercise",
+        description: "Choose an exercise to start logging sets.",
+      },
+      visible: {
+        op: "equal",
+        left: ref("source", ["page", "total"], "screen"),
+        right: literal(0),
+      },
+    },
     ...indices.map(overviewCard),
     {
       ...button(
         "add-exercise",
         "Add exercise",
         navigateFromCards("choose-exercise", entity),
+        "primary",
       ),
       visible: {
         op: "equal",

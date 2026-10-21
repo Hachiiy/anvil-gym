@@ -62,7 +62,7 @@ const list = (id: string, items: Binding, ongoing: boolean): NativeNode => ({
         : []),
       button(
         `${id}-open`,
-        ongoing ? "Continue" : "Open workout",
+        ongoing ? "Continue workout" : "View workout",
         navigate("workout", object({ id: ref("item", ["id"], "workout") })),
         ongoing ? "primary" : "secondary",
       ),
@@ -89,12 +89,6 @@ export const history = workoutView({
   ],
   root: page("workouts", [
     heading("history-title", "History", 1),
-    button(
-      "recently-deleted",
-      "Recently deleted",
-      [{ op: "refresh-source", source: "removals" }],
-      "ghost",
-    ),
     recoveryControls("workout-undo", [
       {
         op: "navigate",
@@ -112,5 +106,11 @@ export const history = workoutView({
     ...libraryFeedback("No workout history"),
     list("recent-workouts", recent, false),
     libraryPageControls("bottom"),
+    button(
+      "recently-deleted",
+      "Recently deleted",
+      [{ op: "refresh-source", source: "removals" }],
+      "ghost",
+    ),
   ]),
 });

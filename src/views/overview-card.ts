@@ -229,18 +229,29 @@ export function overviewCard(slot: number): NativeNode {
             props: { gap: "small" },
             children: [
               {
-                id: `set-inputs-${slot}`,
+                id: `set-heading-${slot}`,
                 component: "row",
-                props: { gap: "small", align: "end", wrap: false },
+                props: { gap: "small", align: "start", wrap: false },
                 children: [
-                  text(`set-number-${slot}`, {
-                    op: "format",
-                    format: "number",
-                    digits: 0,
-                    value: loggingValue(slot, "ordinals", { itemIndex: "set" }),
-                  }),
-                  metric(slot, 0),
-                  metric(slot, 1),
+                  {
+                    id: `set-number-${slot}`,
+                    component: "heading",
+                    props: {
+                      level: 3,
+                      text: join(
+                        literal("Set"),
+                        {
+                          op: "format",
+                          format: "number",
+                          digits: 0,
+                          value: loggingValue(slot, "ordinals", {
+                            itemIndex: "set",
+                          }),
+                        },
+                        " ",
+                      ),
+                    },
+                  },
                   {
                     id: `set-done-${slot}`,
                     component: "checkbox",
@@ -251,6 +262,12 @@ export function overviewCard(slot: number): NativeNode {
                     },
                   },
                 ],
+              },
+              {
+                id: `set-inputs-${slot}`,
+                component: "row",
+                props: { gap: "normal", align: "end", wrap: false },
+                children: [metric(slot, 0), metric(slot, 1)],
               },
               {
                 id: `planned-${slot}`,
@@ -332,13 +349,13 @@ export function overviewCard(slot: number): NativeNode {
             },
             button(
               `previous-${slot}`,
-              "Previous values",
+              "Previous workout",
               [{ op: "refresh-source", source: compareName(slot) }],
               "ghost",
             ),
             button(
               `details-${slot}`,
-              "Details",
+              "Set options",
               [
                 ...submitCards,
                 ...navigate(

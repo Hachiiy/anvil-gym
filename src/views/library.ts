@@ -27,7 +27,7 @@ function section(kind: "routine" | "exercise"): NativeNode {
               "starter-exercises",
               "Add starter exercises",
               navigate("starter-catalog"),
-              "ghost",
+              "secondary",
             ),
           ]
         : []),
@@ -42,19 +42,19 @@ function section(kind: "routine" | "exercise"): NativeNode {
         },
         template: {
           id: `${kind}-row`,
-          component: "row",
-          props: { gap: "small", align: "center", wrap: true },
+          component: "card",
+          props: { gap: "small" },
           children: [
             {
               id: `${kind}-name`,
-              component: "text",
-              props: { text: ref("item", ["data", "name"], "entry") },
+              component: "heading",
+              props: { text: ref("item", ["data", "name"], "entry"), level: 2 },
             },
             button(
               `open-${kind}`,
-              "Edit",
+              routines ? "View routine" : "Edit exercise",
               navigate(kind, object({ id: ref("item", ["id"], "entry") })),
-              "ghost",
+              "secondary",
             ),
           ],
         },
@@ -96,12 +96,31 @@ export const library = workoutView({
       component: "row",
       props: { gap: "small", wrap: true },
       children: [
-        button("show-routines", "Routines", [
-          { op: "set-state", path: ["section"], value: literal("routines") },
-        ]),
-        button("show-exercises", "Exercises", [
-          { op: "set-state", path: ["section"], value: literal("exercises") },
-        ]),
+        ...(["routines", "exercises"] as const).map((value): NativeNode => {
+          const selected = button(
+            `show-${value}`,
+            value === "routines" ? "Routines" : "Exercises",
+            [{ op: "set-state", path: ["section"], value: literal(value) }],
+            "primary",
+          );
+          return {
+            id: `select-${value}`,
+            component: "condition",
+            props: {
+              when: {
+                op: "equal",
+                left: ref("state", ["section"]),
+                right: literal(value),
+              },
+            },
+            then: selected,
+            else: {
+              ...selected,
+              id: `choose-${value}`,
+              props: { ...selected.props, tone: "secondary" },
+            },
+          };
+        }),
       ],
     },
     section("routine"),

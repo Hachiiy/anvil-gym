@@ -58,6 +58,11 @@ export const workouts = workoutView({
         props: { gap: "small" },
         children: [
           {
+            id: "active-status",
+            component: "badge",
+            props: { text: "In progress", tone: "success" },
+          },
+          {
             id: "active-title",
             component: "heading",
             props: {
@@ -94,7 +99,7 @@ export const workouts = workoutView({
       then: {
         ...startWorkoutButton,
         id: "start-another",
-        props: { tone: "ghost", label: "Start workout" },
+        props: { tone: "ghost", label: "Start another workout" },
       },
       else: startWorkoutButton,
     },
@@ -120,7 +125,7 @@ export const workouts = workoutView({
         component: "stack",
         props: { gap: "normal" },
         children: [
-          heading("routine-heading", "Your routines"),
+          heading("routine-heading", "Start from a routine"),
           {
             id: "routine-list",
             component: "list",
@@ -145,7 +150,7 @@ export const workouts = workoutView({
                 },
                 button(
                   "start-routine",
-                  "Start",
+                  "Start routine",
                   [
                     {
                       op: "invoke",
