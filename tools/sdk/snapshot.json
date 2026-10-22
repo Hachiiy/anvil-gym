@@ -1,16 +1,16 @@
 {
-  "profile": "anvil-app-tools/2.14.0",
-  "sourceCommit": "fe3ded0c220a5bfbeabbfb0ee7f67c619ab6e80e",
+  "profile": "anvil-app-tools/2.15.0",
+  "sourceCommit": "7a4bd698f718961eb1ade54df11a6a87868481ba",
   "sourceState": "committed",
   "files": {
     "contracts/apps/identity.ts": "45ff427c508d656677086194c6ad1ba97cccb71fb7152b27230a238d5535b061",
     "contracts/apps/units.ts": "ce63cb93c8b4ec048b0da41cafd674b5153eb7c0284ffd30ff2657035dfed805",
     "contracts/apps/json-schema.ts": "34abbfae655ec9141c240ec6950f9cfa10f13ee71f56edfedba2d8492ed58c2e",
     "contracts/apps/recipe.ts": "bc9bc7a3ea8ee9ccd038a7df3ae48b167f3f79014186ccb296f97ab395e61aba",
-    "contracts/apps/manifest.ts": "9d012fed518018644138ec0a934358b07a1ee13ebcb59e60d7c20525213c429a",
-    "contracts/apps/protocol.ts": "33bd32c469d395d72632fa1327c934bed806df40c4ea5dd9700f8353571963a6",
+    "contracts/apps/manifest.ts": "18e1355541b21494b8907e66e720c70949fb22821db8e1fd7d38c61e032aa69a",
+    "contracts/apps/protocol.ts": "b335bac62a279d9414256014986ca4737db87b36361c177ff4c65c92e4e85d5d",
     "contracts/apps/errors.ts": "4d3797d6b088c9eb047846d9ef5579eb25355525e24731256f6e83636ccd974b",
-    "contracts/apps/validation.ts": "ca9208773c219dd7bb725da4334ab80d00f093799fa7b5700fcf239ae19ce8fc",
+    "contracts/apps/validation.ts": "3a103e6598b565a751718246e4f5852dda602ac3d2f97ed7f9443fb2abd7d137",
     "contracts/apps/mcp.ts": "c7bf3d92332d8bb6f2936723adf7e6527472a45b3977a6b7bc8ef1216302b9fb",
     "contracts/apps/json.ts": "1f17ef7d88f50f6902b45c3117ef419cc6d28cd9670a61255398c2aa9ec4db6d",
     "contracts/apps/schema-inference.ts": "653230b989555faf40e6805dcf3a99017a041ab3a3e71453f16ddff09fe728d9",
@@ -27,7 +27,8 @@
     "contracts/apps/native/validation.ts": "cdc5f986e1f02fd48a7b6fcef09903ce736fad4ed7993451d447928a61dfa409",
     "contracts/apps/native/view.ts": "8f9340858372a6c92e4ac7ac94d690c25174a79189a05ea32cf82bae124834ed",
     "contracts/apps/native/visuals.ts": "563313970aa1b274bbbc8b1b37a5525b16d2d36f1447613c3d48d09d86618647",
-    "contracts/limits.ts": "74106045693b6697fffae33857d419fca8fa488b17ff80eb184edd11b9fee5d0",
+    "contracts/app-display.ts": "1a291aff607b6e7016e8f77fe91641178a294b3de386b890b4c076ac3d6175ff",
+    "contracts/limits.ts": "2f2ce76be1a283166b46311f43845c09eb9c969921d22f8c31dd8873e3749a1e",
     "contracts/development-http.ts": "07d9940ec2413163a6681cbfacd607a81bd22449d7cd85cd2216331db8ff3cd6",
     "contracts/apps/index.ts": "13919ac426f6168c61ad3ed602c91cf8a401f8f1633703608e7dc067dea7a066",
     "src/archive.ts": "f0dcb1a8acb5b7913696326fbcbe64df54c22d6ee7f888d7ffd6d87283bce444",
@@ -52,6 +53,6 @@
     "tooling/release-state.ts": "2a3a53dbdd15a6f4c1b41c55a893452e80141b46b00f509e44ffee187b5ff734",
     "cli.mjs": "1bdcf02baf519c4143f46c0002fd64d20f1e21cd8eab8fb4bddc7feb2d1d3e95",
     "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
-    "package.json": "7db76dadec2161a402b3c2416500ccb92f75c7b80d12acca79688cdbbae9f3d8"
+    "package.json": "79593729e09079abbf2cca59fe7fcf7a20197c07bedaf0c37010e92f785e3d09"
   }
 }

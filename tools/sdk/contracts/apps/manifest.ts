@@ -67,14 +67,26 @@ export const appManifestSchema = z.strictObject({
     license: z.string().min(1).max(100),
   }),
   publisher: z.strictObject({ displayName: z.string().min(1).max(100) }),
+  initialRole: z
+    .strictObject({
+      name: z.string().trim().min(1).max(80),
+      color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+      instructions: z.string().min(1).max(16000),
+    })
+    .optional(),
   initialAgent: z
     .strictObject({
       name: z.string().trim().min(1).max(agentProfileLimits.maxNameCharacters),
-      role: z.string().trim().min(1).max(agentProfileLimits.maxRoleCharacters),
+      role: z
+        .string()
+        .trim()
+        .min(1)
+        .max(agentProfileLimits.maxRoleCharacters)
+        .default("Specialist"),
       systemInstructions: z
         .string()
-        .min(1)
-        .max(agentProfileLimits.maxSystemInstructionsCharacters),
+        .max(agentProfileLimits.maxSystemInstructionsCharacters)
+        .default(""),
     })
     .optional(),
   compatibility: appCompatibilitySchema,

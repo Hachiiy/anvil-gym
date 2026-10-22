@@ -1,6 +1,6 @@
 # Gym for Anvil
 
-Gym 0.4.2 is an installable App for strength, basic cardio and custom exercise
+Gym 0.5.0 is an installable App for strength, basic cardio and custom exercise
 measurements. It uses Anvil's native components and theme, with no iframe or
 publisher code running in the installed App.
 
@@ -10,17 +10,18 @@ Open **Anvil → Market**, find **Gym** and select **Install**. Review in chat
 is optional and separate. If Gym is missing, refresh the Market catalog.
 
 Installation keeps data separate from other Apps and includes **Personal Trainer**,
-an ordinary agent configured for Gym with access to Gym only. It inherits the
+an ordinary agent assigned a **Personal Trainer** role with instructions and
+access to Gym only. It inherits the
 workspace model and starts no model work on installation. An explicit update
 can create the trainer once for an existing installation.
 
-The trainer follows Anvil’s standard `initialAgent` contract: after creation,
-only the owner controls its settings. Updates, disable, uninstall, data deletion
-and reinstall never edit, delete or recreate it, even after an owner deletes
-the agent. Its configured Gym grant remains unchanged on uninstall; Gym is
+The trainer follows Anvil’s standard `initialAgent` and `initialRole` contracts: after creation,
+only the owner controls the agent, role and assignment. Updates, disable, uninstall, data deletion
+and reinstall never edit, delete or recreate them, even after an owner deletes
+the agent or role. Its configured Gym grant remains unchanged on uninstall; Gym is
 unavailable until reinstalled. Owner edits and revoked access remain intact.
 Current Gym capabilities are discovered normally, without updating the agent’s
-instructions. Other agents require their own explicit Gym assignment.
+instructions. Other agents gain Gym access through an explicitly assigned role.
 
 ## Workouts and routines
 
@@ -64,8 +65,8 @@ integrations are deferred. Offline editing is not supported.
 ## Development
 
 Use Node.js 24 or later, then `npm ci` and `npm run check`. The standalone SDK
-2.14.0 is included through the local dependency [tools/sdk](tools/sdk); no private
-workspace or npm registry is needed. Its 50-file hash snapshot is checked
+2.15.0 is included through the local dependency [tools/sdk](tools/sdk); no private
+workspace or npm registry is needed. Its 51-file hash snapshot is checked
 by the author validation. See [tool provenance](tools/README.md).
 
 - `npm run dev -- https://anvil.example` pairs an isolated preview and watches

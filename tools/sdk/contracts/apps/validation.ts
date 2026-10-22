@@ -19,6 +19,17 @@ export function validateAppManifest(manifest: AppManifest): string[] {
   const errors: string[] = [];
   if (manifest.initialAgent && manifest.package.kind !== "app")
     errors.push("Only Apps can declare an initial agent.");
+  if (
+    manifest.initialRole &&
+    (manifest.package.kind !== "app" || !manifest.initialAgent)
+  )
+    errors.push("An initial role requires an App with an initial agent.");
+  if (
+    manifest.initialAgent &&
+    !manifest.initialRole &&
+    !manifest.initialAgent.systemInstructions.trim()
+  )
+    errors.push("An initial agent requires role instructions.");
   const unique = (names: readonly string[], label: string) => {
     if (new Set(names).size !== names.length)
       errors.push(`Duplicate ${label}.`);

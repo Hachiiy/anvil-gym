@@ -1,6 +1,6 @@
 # Standalone public App SDK
 
-`sdk/` contains the Apache-2.0 Anvil App author profile 2.14.0 source distribution.
+`sdk/` contains the Apache-2.0 Anvil App author profile 2.15.0 source distribution.
 It includes typed native definition builders, package/archive validation,
 static conformance, the author-only TypeScript compiler/CLI and their bounded
 App contract dependencies. It contains no server, deployment configuration,
@@ -10,8 +10,8 @@ local watch/build/upload workflow and `npm run release` for exact immutable
 publication through local GitHub CLI authentication. Release identity stays
 outside the repository; publication never installs Gym or starts model work. These author tools never enter installed Apps.
 
-`sdk/snapshot.json` records the source revision and state and SHA-256 of all 50
-exported tool files. SDK 2.14.0 is exported from clean committed product source; the snapshot records that exact revision. Native manifests remain capped at 4 MiB and 128,000 JSON
+`sdk/snapshot.json` records the source revision and state and SHA-256 of all 51
+exported tool files. SDK 2.15.0 is exported from clean committed product source; the snapshot records that exact revision. Native manifests remain capped at 4 MiB and 128,000 JSON
 nodes; retained Core data JSON defaults remain 512 KiB and 32,000 nodes, and other
 Core action input/result/record/intermediate limits are unchanged. The SDK permits
 up to 128 declared actions per manifest and native view; this does not expand
@@ -53,3 +53,8 @@ SDK 2.14 adds optional primary navigation visibility and targeted form source
 refresh. Gym uses one aggregate workout read and manually requested history;
 unchanged autosave forms produce no writes. Core authority and data bounds stay
 unchanged.
+
+SDK 2.15 adds creation-only `initialRole` instructions and appearance alongside
+`initialAgent`. Anvil grants that role access only to its originating App and
+assigns it to the created agent. Later lifecycle operations never manage either
+resource or their assignment.

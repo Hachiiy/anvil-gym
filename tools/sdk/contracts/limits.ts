@@ -98,3 +98,7 @@ export const agentProfileLimits = Object.freeze({
   maxPersonalityCharacters: 4000,
   maxSystemInstructionsCharacters: 16000,
 });
+export const appDisplayLimits = /* @__PURE__ */ Object.freeze({
+  paramsBytes: 4096,
+  intentsPerResponse: 8,
+});

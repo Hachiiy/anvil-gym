@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { appViewIntentSchema } from "../app-display.js";
 import { appPlatformLimits as limits } from "../limits.js";
 import { appDigestSchema, appKeySchema } from "./identity.js";
 import { appJsonValueSchema } from "./json.js";
@@ -56,6 +57,7 @@ export const appActionResultSchema = z.strictObject({
   value: appJsonValueSchema(limits.resultBytes),
   sources: z.array(appSourceSchema).max(limits.queryScanRows),
   committedAt: z.iso.datetime(),
+  appView: appViewIntentSchema.optional(),
 });
 export const appToolSchema = z.strictObject({
   name: appKeySchema,
