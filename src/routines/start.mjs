@@ -1,3 +1,4 @@
+import { totalRecords, routineOccurrenceLimits } from "./start-limits.mjs";
 import { plannedSet } from "../domain-schema.mjs";
 import { integer, list, object, reference, text } from "../schema.mjs";
 import {
@@ -70,25 +71,6 @@ const allCaps = [
   ...readCaps("routine", "session", "block", "occurrence", "set"),
   ...writeCaps("session", "block", "occurrence", "set"),
 ];
-const totalRecords = binary("add", literal(1), {
-  op: "sum",
-  source: result("routine", "data", "blocks"),
-  maxItems: 30,
-  value: binary(
-    "add",
-    literal(1),
-    binary(
-      "add",
-      length(item("occurrences")),
-      binary("multiply", item("rounds"), {
-        op: "sum",
-        source: item("occurrences"),
-        maxItems: 12,
-        value: length(item("sets")),
-      }),
-    ),
-  ),
-});
 
 export const routineStartActions = [
   {
@@ -267,6 +249,7 @@ export const routineStartActions = [
           ),
           order: [{ field: ["position"], direction: "desc" }],
         },
+        ...routineOccurrenceLimits,
         create(
           "saved",
           "occurrence",

@@ -202,7 +202,10 @@ export const overviewActions = [
     summary:
       "Save one visible exercise card; an unused empty card performs no mutation",
     effect: "transaction",
-    capabilities: [...readCaps("occurrence", "set"), ...writeCaps("set")],
+    capabilities: [
+      ...readCaps("occurrence", "set", "session"),
+      ...writeCaps("set"),
+    ],
     inputSchema: object({ occurrenceId: reference, sets: edits }, ["sets"]),
     resultSchema: object({ sets: edits }),
     recipe: {

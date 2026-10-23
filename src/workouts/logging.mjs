@@ -110,7 +110,10 @@ export const loggingActions = [
     name: "record-occurrence-set",
     summary: "Record a set only within the requested exercise occurrence",
     effect: "transaction",
-    capabilities: [...readCaps("set", "occurrence"), ...writeCaps("set")],
+    capabilities: [
+      ...readCaps("set", "occurrence", "session"),
+      ...writeCaps("set"),
+    ],
     inputSchema: object({
       ...setEditSchema.properties,
       occurrenceId: reference,
@@ -160,7 +163,10 @@ export const loggingActions = [
     summary:
       "Autosave a focused exercise's bounded set rows atomically with their exact revisions",
     effect: "transaction",
-    capabilities: [...readCaps("set", "occurrence"), ...writeCaps("set")],
+    capabilities: [
+      ...readCaps("set", "occurrence", "session"),
+      ...writeCaps("set"),
+    ],
     inputSchema: object({ occurrenceId: reference, sets: edits }),
     resultSchema: object({ sets: edits }),
     recipe: {

@@ -309,7 +309,10 @@ export const setActions = [
     summary:
       "Record or correct actual values against this set's pinned measurement meanings",
     effect: "transaction",
-    capabilities: [...readCaps("set", "occurrence"), ...writeCaps("set")],
+    capabilities: [
+      ...readCaps("set", "occurrence", "session"),
+      ...writeCaps("set"),
+    ],
     inputSchema: setEditSchema,
     resultSchema: rowSchema("set"),
     recipe: {
@@ -317,6 +320,12 @@ export const setActions = [
       steps: [
         get("set", "set", input("id")),
         get("occurrence", "occurrence", result("set", "data", "occurrenceId")),
+        get("session", "session", result("set", "data", "sessionId")),
+        assertion(
+          "editable-workout",
+          oneOf(result("session", "data", "status"), ["active", "completed"]),
+          "This workout is abandoned.",
+        ),
         { id: "values", op: "let", value: actualValues },
         batch(
           "valid-values",
